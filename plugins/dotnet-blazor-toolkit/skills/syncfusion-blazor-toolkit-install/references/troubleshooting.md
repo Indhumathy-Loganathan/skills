@@ -9,7 +9,7 @@
 **Root cause**: Theme CSS is not linked in the app's host file, or the path/filename is incorrect.
 
 **Diagnosis**:
-1. Check the correct host file for the project type (`App.razor` for Blazor Server/Web App; `wwwroot/index.html` for Blazor WebAssembly)
+1. Check the correct host file for the project type (`App.razor` for Blazor Web App / modern Blazor Server; `_Host.cshtml` for legacy Blazor Server; `wwwroot/index.html` for Blazor WebAssembly)
 2. Look for a line like:
    ```html
    <link href="_content/Syncfusion.Blazor.Toolkit/styles/fluent.min.css" rel="stylesheet" />
