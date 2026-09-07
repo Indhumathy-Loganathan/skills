@@ -103,7 +103,7 @@ Local references are preferred because they:
 
 ## Common Mistakes
 
-1. **Linking in the wrong file**: Always use `App.razor` for all project types. Don't link in `index.html` for WASM or `_Host.cshtml`.
+1. **Linking in the wrong file**: Link the theme in the app's host file (`App.razor` for Blazor Server/Web App; `wwwroot/index.html` for Blazor WebAssembly).
 2. **Wrong path directory**: Ensure the path is `_content/Syncfusion.Blazor.Toolkit/styles/` exactly (note: `styles/`, not `themes/`).
 3. **Wrong theme name**: Using `bootstrap5.min.css`, `tailwind.min.css`, `material.min.css`, or other non-Fluent themes won't work. Toolkit supports **only `fluent.min.css`**.
 4. **Missing .min extension**: Ensure you use `.min.css` (not just `.css`). The correct filename is `fluent.min.css`.

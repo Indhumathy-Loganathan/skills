@@ -51,7 +51,7 @@ Blazor supports multiple render modes. Toolkit components have specific requirem
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorComponents()
-    .AddInteractiveServerRenderMode();
+    .AddInteractiveServerComponents();
 
 builder.Services.AddSyncfusionBlazorToolkit();
 
