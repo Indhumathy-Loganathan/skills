@@ -2,35 +2,46 @@
 name: syncfusion-blazor-toolkit-install
 description: >
   Install and configure the open-source Syncfusion Blazor Toolkit
-  (Syncfusion.Blazor.Toolkit) for Blazor Server, WebAssembly, and Blazor Web App.
-  Use for package identity, AddSyncfusionBlazorToolkit(), _Imports.razor,
-  Fluent theme CSS, and interactive render modes. Do not use for commercial
-  Syncfusion.Blazor* packages, license keys, or per-component API.
+  (Syncfusion.Blazor.Toolkit): package identity, AddSyncfusionBlazorToolkit(),
+  _Imports.razor, Fluent theme CSS, and interactive render modes for Server,
+  WebAssembly, and Blazor Web App.
+  
+  USE FOR: first-time Toolkit setup, package identity, service registration,
+  theme linking, split-app dual registration, common install failures.
+  DO NOT USE FOR: commercial Syncfusion.Blazor* packages or license keys,
+  per-component API (buttons, charts, dialogs, etc.), Hybrid/MAUI hosting.
 license: MIT
+compatibility: ".NET 8+, Blazor Server / WebAssembly / Auto / Static SSR"
 metadata:
   author: "Syncfusion Inc"
   version: "1.0.2"
-  compatibility: ".NET 8+, Blazor Server, WebAssembly, Blazor Web App"
 ---
 
 ## Core Rules
 
 1. Use the exact package ID `Syncfusion.Blazor.Toolkit`.
 2. Call `AddSyncfusionBlazorToolkit()` in `Program.cs` before `builder.Build()`.
-3. Import `@using Syncfusion.Blazor.Toolkit` in `_Imports.razor`.
+3. Import `@using Syncfusion.Blazor.Toolkit` in `_Imports.razor`; add component namespaces such as `@using Syncfusion.Blazor.Toolkit.Buttons` only when a component needs them.
 4. Link `_content/Syncfusion.Blazor.Toolkit/styles/fluent.min.css` in the app host file.
 5. Use `@rendermode` for interactive Toolkit components; static SSR is read-only only.
 6. In split Blazor Web Apps, register Toolkit in every project that uses Toolkit components.
 7. Never use commercial `Syncfusion.Blazor*` packages or license-key APIs for Toolkit.
 8. Keep this skill install-focused; use the references for details and troubleshooting.
 
+## Don’ts
+
+- Don’t treat `Syncfusion.Blazor` or component-specific commercial packages as Toolkit dependencies.
+- Don’t rely on static SSR when the component must respond to clicks, binding, or dynamic updates.
+- Don’t turn this skill into a component API reference; use the demos or component skills for that.
+
 ## Quick Decision Table
 
 | Scenario | Package | Program.cs | Host file for CSS | Interactivity |
 | --- | --- | --- | --- | --- |
-| Blazor Server | `Syncfusion.Blazor.Toolkit` | `builder.Services.AddSyncfusionBlazorToolkit()` | `App.razor` or `_Host.cshtml` | `@rendermode` if clicks/inputs are needed |
+| Blazor Server | `Syncfusion.Blazor.Toolkit` | `builder.Services.AddSyncfusionBlazorToolkit()` | `App.razor` or legacy `_Host.cshtml` | `@rendermode` if clicks/inputs are needed |
 | Blazor WebAssembly | `Syncfusion.Blazor.Toolkit` | `builder.Services.AddSyncfusionBlazorToolkit()` in the client app | `wwwroot/index.html` | `@rendermode InteractiveWebAssembly` |
-| Split Blazor Web App | `Syncfusion.Blazor.Toolkit` | Register in Server and/or Client, depending on where components live | `App.razor` | `@rendermode InteractiveServer` or `InteractiveWebAssembly` |
+| Blazor Web App Auto | `Syncfusion.Blazor.Toolkit` | Register in the Server and Client projects that use Toolkit | `App.razor` | `@rendermode InteractiveAuto` |
+| Split Blazor Web App | `Syncfusion.Blazor.Toolkit` | Register in Server and/or Client, depending on where components live | `App.razor` | `@rendermode InteractiveServer`, `InteractiveWebAssembly`, or `InteractiveAuto` |
 | Static SSR only | `Syncfusion.Blazor.Toolkit` | Register services as needed | `App.razor` or `index.html` | None; read-only only |
 
 ## Minimal Setup

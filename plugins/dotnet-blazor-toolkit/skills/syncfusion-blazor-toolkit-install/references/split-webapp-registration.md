@@ -1,6 +1,10 @@
 # Split Blazor Web App Service Registration
 
-When using a split Blazor Web App (separate Server and Client projects), Toolkit services must be registered in the correct location based on which projects use Toolkit components.
+When using a split Blazor Web App, register Toolkit services in every project that actually renders Toolkit components.
+
+## Current template note
+
+For `dotnet new blazor -int Auto` and `dotnet new blazor -int WebAssembly`, the generated Server project typically wires interactive server and WebAssembly support in `Program.cs`, while the `.Client` project is the browser-side app. Keep Toolkit registration in whichever project uses Toolkit components.
 
 ## Scenario 1: Only Server uses Toolkit
 
@@ -8,11 +12,15 @@ When using a split Blazor Web App (separate Server and Client projects), Toolkit
 ```csharp
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddRazorComponents();
-builder.Services.AddSyncfusionBlazorToolkit();  // <-- Server-side registration
+builder.Services.AddRazorComponents()
+    .AddInteractiveServerComponents();
+
+builder.Services.AddSyncfusionBlazorToolkit();  // Server-side registration
 
 var app = builder.Build();
-// ... rest of configuration
+
+app.MapRazorComponents<App>()
+    .AddInteractiveServerRenderMode();
 ```
 
 **Client/Program.cs**:
@@ -20,11 +28,8 @@ var app = builder.Build();
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
 builder.RootComponents.Add<App>("#app");
-builder.RootComponents.Add<HeadOutlet>("head::after");
 
 // No Toolkit registration needed if Client doesn't use Toolkit
-builder.Services.AddScoped(sp => new HttpClient { });
-
 await builder.Build().RunAsync();
 ```
 
@@ -34,10 +39,14 @@ await builder.Build().RunAsync();
 ```csharp
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddRazorComponents();
+builder.Services.AddRazorComponents()
+    .AddInteractiveServerComponents();
 // No Toolkit registration; Server doesn't use it
 
 var app = builder.Build();
+
+app.MapRazorComponents<App>()
+    .AddInteractiveServerRenderMode();
 ```
 
 **Client/Program.cs**:
@@ -45,9 +54,8 @@ var app = builder.Build();
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
 builder.RootComponents.Add<App>("#app");
-builder.RootComponents.Add<HeadOutlet>("head::after");
 
-builder.Services.AddSyncfusionBlazorToolkit();  // <-- Client-side registration
+builder.Services.AddSyncfusionBlazorToolkit();  // Client-side registration
 
 await builder.Build().RunAsync();
 ```
@@ -58,10 +66,17 @@ await builder.Build().RunAsync();
 ```csharp
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddRazorComponents();
-builder.Services.AddSyncfusionBlazorToolkit();  // <-- Register here
+builder.Services.AddRazorComponents()
+    .AddInteractiveServerComponents()
+    .AddInteractiveWebAssemblyComponents();
+
+builder.Services.AddSyncfusionBlazorToolkit();  // Register here
 
 var app = builder.Build();
+
+app.MapRazorComponents<App>()
+    .AddInteractiveServerRenderMode()
+    .AddInteractiveWebAssemblyRenderMode();
 ```
 
 **Client/Program.cs**:
@@ -69,12 +84,15 @@ var app = builder.Build();
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
 builder.RootComponents.Add<App>("#app");
-builder.RootComponents.Add<HeadOutlet>("head::after");
 
-builder.Services.AddSyncfusionBlazorToolkit();  // <-- Also register here
+builder.Services.AddSyncfusionBlazorToolkit();  // Also register here
 
 await builder.Build().RunAsync();
 ```
+
+## Scenario 4: Auto render mode uses Toolkit on both sides
+
+If you use `@rendermode InteractiveAuto`, keep Toolkit registration in both Server and Client when both halves render Toolkit components.
 
 ## Common Mistake: Forgetting Client Registration
 
@@ -86,10 +104,9 @@ If Toolkit components are used in the Client project but `AddSyncfusionBlazorToo
 
 ## Theme CSS in Split Web App
 
-Theme CSS should be linked in the **App.razor** file (which is typically the shared host for both Server and Client):
+Theme CSS should be linked in the shared `App.razor` host file so both Server and Client components can use it:
 
 ```razor
-<!-- App.razor (shared, loaded first) -->
 <!DOCTYPE html>
 <html lang="en">
 <head>

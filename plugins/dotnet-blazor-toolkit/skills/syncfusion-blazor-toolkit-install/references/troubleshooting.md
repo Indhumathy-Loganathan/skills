@@ -315,7 +315,6 @@ Also ensure both projects have the NuGet package reference in their `.csproj` fi
 3. Clear browser cache (Ctrl+Shift+Delete) and reload (Ctrl+F5)
 4. For split Web App, ensure **both** Server and Client `Program.cs` files have the registration
 5. Verify the package is installed: `dotnet list package | grep Syncfusion.Blazor.Toolkit`
-```
 
 ---
 

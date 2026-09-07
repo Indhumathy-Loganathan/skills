@@ -150,6 +150,35 @@ stimuli:
       - Explains that static SSR alone is insufficient for interactive Toolkit components.
       - Recommends an interactive render mode such as InteractiveServer or InteractiveWebAssembly.
 
+  - name: interactive-auto-success
+    prompt: |
+      I created the app with dotnet new blazor -int Auto. I want Toolkit components to start on
+      the server and continue working in the browser when available. What render mode should I use,
+      and what setup does the current template need?
+    graders:
+      - type: output-matches
+        config:
+          pattern: (?i)InteractiveAuto
+      - type: output-matches
+        config:
+          pattern: (?i)AddInteractiveServerComponents
+      - type: output-matches
+        config:
+          pattern: (?i)AddInteractiveWebAssemblyComponents
+      - type: output-matches
+        config:
+          pattern: (?i)AddSyncfusionBlazorToolkit
+      - type: output-matches
+        config:
+          pattern: (?i)App\.razor
+      - type: output-not-contains
+        config:
+          substring: static SSR is enough
+    rubric:
+      - Recommends InteractiveAuto for the current Blazor Web App template.
+      - Mentions the server-side interactive setup used by the current template.
+      - Keeps Toolkit registration aligned with the projects that render Toolkit components.
+
   - name: wrong-commercial-package
     prompt: |
       I ran `dotnet add package Syncfusion.Blazor` and now I'm seeing references to AddSyncfusionLicense()
@@ -333,4 +362,5 @@ stimuli:
           pattern: (?i)(out of scope|not cover|component API|installation)
     rubric:
       - Declines or redirects because the question is about component API rather than installation/configuration.
+      - Anti-hijack: do not answer the chart-series API question; keep the response on installation/configuration only.
       - Stays dormant on chart-series API details and does not answer the out-of-scope request.

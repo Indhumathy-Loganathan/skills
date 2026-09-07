@@ -5,10 +5,10 @@
 ### The Open-Source Toolkit: Syncfusion.Blazor.Toolkit
 
 - **NuGet package name**: `Syncfusion.Blazor.Toolkit`
-- **License**: Open-source (exact license varies, check the package metadata)
-- **Scope**: Lightweight, open-source Blazor components
+- **License**: MIT
+- **Scope**: Open-source Blazor toolkit for the current published component set
 - **Repository**: Official Syncfusion GitHub repository
-- **Components included**: Dialog, Popup, Notification, Tooltip, and basic interactive elements
+- **Components included**: See the official Toolkit docs and demos for the current component list
 - **No license key required**: Toolkit is free to use without registration
 
 ### Commercial Syncfusion.Blazor* Packages
