@@ -24,13 +24,13 @@ stimuli:
           pattern: (?i)fluent\.min\.css|_content/Syncfusion\.Blazor\.Toolkit/styles/
       - type: output-matches
         config:
-          pattern: (?i)App\.razor
+          pattern: (?i)(App\.razor|_Host\.cshtml)
       - type: output-not-contains
         config:
           substring: Syncfusion.Blazor.Buttons
-      - type: output-not-contains
+      - type: output-not-matches
         config:
-          substring: license key
+          pattern: (?i)(enter|add|register|provide).*(license key)
       - type: output-not-contains
         config:
           substring: AddSyncfusionLicense
@@ -200,9 +200,9 @@ stimuli:
       - type: output-matches
         config:
           pattern: (?i)AddSyncfusionBlazorToolkit
-      - type: output-not-contains
+      - type: output-not-matches
         config:
-          substring: license key
+          pattern: (?i)(enter|add|register|provide).*(license key)
     rubric:
       - Identifies the commercial package as wrong for Toolkit scenarios and recommends removing it.
       - Replaces licensing guidance with the Toolkit service registration method.
@@ -274,12 +274,12 @@ stimuli:
       - type: output-matches
         config:
           pattern: (?i)fluent\.min\.css
-      - type: output-not-contains
+      - type: output-not-matches
         config:
-          substring: bootstrap5
-      - type: output-not-contains
+          pattern: (?i)<link[^>]*bootstrap5
+      - type: output-not-matches
         config:
-          substring: tailwind
+          pattern: (?i)<link[^>]*tailwind
     rubric:
       - Identifies Fluent as the only supported theme and points to fluent.min.css.
       - Rejects bootstrap5 and tailwind as unsupported Toolkit themes.
@@ -300,9 +300,9 @@ stimuli:
       - type: output-matches
         config:
           pattern: _content/Syncfusion\.Blazor\.Toolkit/styles/
-      - type: output-not-contains
+      - type: output-not-matches
         config:
-          substring: themes/
+          pattern: (?i)<link[^>]*themes/
     rubric:
       - Gives the exact correct path under the styles directory.
       - Explains that themes/ is the wrong directory for Toolkit assets.
@@ -340,7 +340,7 @@ stimuli:
           substring: material.css
       - type: output-matches
         config:
-          pattern: (?i)only
+          pattern: (?i)(fluent\s+theme\s+only|only\s+(the\s+)?fluent)
     rubric:
       - Treats the issue as a script-loading/configuration problem with static asset 404s.
       - Reinforces that Toolkit supports only the Fluent theme and that the package should be verified.
@@ -351,9 +351,9 @@ stimuli:
       the series collection for a line chart? What are the available series types?
     expect_activation: false
     graders:
-      - type: output-not-contains
+      - type: output-not-matches
         config:
-          substring: series
+          pattern: (?i)\bseries\s+collection\b
       - type: output-not-contains
         config:
           substring: LineSeriesType
