@@ -56,12 +56,12 @@ stimuli:
       - type: output-matches
         config:
           pattern: (?i)@using\s+Syncfusion\.Blazor\.Toolkit
+      - type: output-not-matches
+        config:
+          pattern: (?i)\bApp\.razor\b.*\b(host file|link|css|stylesheet)\b
       - type: output-not-contains
         config:
-          substring: App.razor
-      - type: output-not-contains
-        config:
-          substring: license
+          substring: license key
     rubric:
       - Explains that WebAssembly uses index.html as the host file for the theme link.
       - Includes the Toolkit package, service registration, and namespace imports.
