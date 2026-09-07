@@ -8,7 +8,7 @@
 - **License**: MIT
 - **Scope**: Open-source Blazor toolkit for the current published component set
 - **Repository**: Official Syncfusion GitHub repository
-- **Components included**: See the official Toolkit docs and demos for the current component list
+- **Components included**: Refer to the [official Syncfusion Blazor Toolkit documentation](https://www.syncfusion.com/blazor-components) for the authoritative and current component list. This skill is not a component reference.
 - **No license key required**: Toolkit is free to use without registration
 
 ### Commercial Syncfusion.Blazor* Packages

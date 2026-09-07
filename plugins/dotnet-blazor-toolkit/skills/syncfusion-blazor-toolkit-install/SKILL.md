@@ -38,10 +38,10 @@ metadata:
 
 | Scenario | Package | Program.cs | Host file for CSS | Interactivity |
 | --- | --- | --- | --- | --- |
-| Blazor Server | `Syncfusion.Blazor.Toolkit` | `builder.Services.AddSyncfusionBlazorToolkit()` | `App.razor` or legacy `_Host.cshtml` | `@rendermode` if clicks/inputs are needed |
+| Blazor Server (legacy _Host.cshtml) | `Syncfusion.Blazor.Toolkit` | `builder.Services.AddSyncfusionBlazorToolkit()` | `_Host.cshtml` | `@rendermode InteractiveServer` |
 | Blazor WebAssembly | `Syncfusion.Blazor.Toolkit` | `builder.Services.AddSyncfusionBlazorToolkit()` in the client app | `wwwroot/index.html` | `@rendermode InteractiveWebAssembly` |
-| Blazor Web App Auto | `Syncfusion.Blazor.Toolkit` | Register in the Server and Client projects that use Toolkit | `App.razor` | `@rendermode InteractiveAuto` |
-| Split Blazor Web App | `Syncfusion.Blazor.Toolkit` | Register in Server and/or Client, depending on where components live | `App.razor` | `@rendermode InteractiveServer`, `InteractiveWebAssembly`, or `InteractiveAuto` |
+| Blazor Web App (Auto) | `Syncfusion.Blazor.Toolkit` | Register in Server and Client projects that use Toolkit | `App.razor` | `@rendermode InteractiveAuto` |
+| Blazor Web App (Split Server/Client) | `Syncfusion.Blazor.Toolkit` | Register in Server and Client projects that use Toolkit | `App.razor` | `@rendermode InteractiveServer`, `InteractiveWebAssembly`, or `InteractiveAuto` |
 | Static SSR only | `Syncfusion.Blazor.Toolkit` | Register services as needed | `App.razor` or `index.html` | None; read-only only |
 
 ## Minimal Setup
@@ -52,21 +52,34 @@ metadata:
 dotnet add package Syncfusion.Blazor.Toolkit
 ```
 
-### Program.cs
+### Program.cs (Blazor Web App / Modern Blazor Server)
 
 ```csharp
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddRazorComponents();
+builder.Services.AddRazorComponents()
+    .AddInteractiveServerComponents()
+    .AddInteractiveWebAssemblyComponents();
+
 builder.Services.AddSyncfusionBlazorToolkit();
 
 var app = builder.Build();
+
+app.MapRazorComponents<App>()
+    .AddInteractiveServerRenderMode()
+    .AddInteractiveWebAssemblyRenderMode();
 ```
 
 ### _Imports.razor
 
 ```razor
 @using Syncfusion.Blazor.Toolkit
+```
+
+For component-specific features, add additional namespaces as needed:
+```razor
+@using Syncfusion.Blazor.Toolkit.Buttons  <!-- Only if using Button features -->
+@using Syncfusion.Blazor.Toolkit.Calendars  <!-- Only if using Calendar features -->
 ```
 
 ### Host file CSS
@@ -79,7 +92,7 @@ var app = builder.Build();
 
 - **Unstyled components**: the Fluent CSS link is missing, wrong, or placed in the wrong host file. See [Theme and host files](./references/theme-and-host-files.md).
 - **Services not configured**: `AddSyncfusionBlazorToolkit()` is missing from `Program.cs`. See [Troubleshooting guide](./references/troubleshooting.md).
-- **Clicks or inputs do nothing**: the page is using static SSR. Add `@rendermode InteractiveServer` or `@rendermode InteractiveWebAssembly`. See [Render modes explained](./references/render-modes.md).
+- **Clicks or inputs do nothing**: the page is using static SSR. Add `@rendermode InteractiveServer`, `@rendermode InteractiveWebAssembly`, or `@rendermode InteractiveAuto`. See [Render modes explained](./references/render-modes.md).
 - **Only one half of a split app works**: register Toolkit in both Server and Client if both use Toolkit. See [Split Blazor Web App registration](./references/split-webapp-registration.md).
 - **Wrong package or license guidance**: the project uses a commercial `Syncfusion.Blazor*` package instead of the Toolkit. See [Package identity and splits](./references/package-identity.md).
 
