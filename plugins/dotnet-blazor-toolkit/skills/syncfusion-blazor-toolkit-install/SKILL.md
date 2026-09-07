@@ -74,13 +74,13 @@ app.MapRazorComponents<App>()
 
 ```razor
 @using Syncfusion.Blazor.Toolkit
+
+@* Optional: Add component-specific namespaces only when using those components *@
+@using Syncfusion.Blazor.Toolkit.Buttons
+@using Syncfusion.Blazor.Toolkit.Calendars
 ```
 
-For component-specific features, add additional namespaces as needed:
-```razor
-@using Syncfusion.Blazor.Toolkit.Buttons  <!-- Only if using Button features -->
-@using Syncfusion.Blazor.Toolkit.Calendars  <!-- Only if using Calendar features -->
-```
+For component-specific features, include the appropriate namespace in `_Imports.razor` as shown above.
 
 ### Host file CSS
 
