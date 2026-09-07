@@ -5,10 +5,10 @@
 ### The Open-Source Toolkit: Syncfusion.Blazor.Toolkit
 
 - **NuGet package name**: `Syncfusion.Blazor.Toolkit`
-- **License**: Open-source (exact license varies, check the package metadata)
-- **Scope**: Lightweight, open-source Blazor components
+- **License**: MIT
+- **Scope**: Open-source Blazor toolkit for the current published component set
 - **Repository**: Official Syncfusion GitHub repository
-- **Components included**: Dialog, Popup, Notification, Tooltip, and basic interactive elements
+- **Components included**: Refer to the [official Syncfusion Blazor Toolkit documentation](https://www.syncfusion.com/blazor-components) for the authoritative and current component list. This skill is not a component reference.
 - **No license key required**: Toolkit is free to use without registration
 
 ### Commercial Syncfusion.Blazor* Packages
@@ -38,6 +38,7 @@ Check the `.csproj` file:
 ```xml
 <!-- Correct for Toolkit -->
 <PackageReference Include="Syncfusion.Blazor.Toolkit" Version="1.0.2" />
+<!-- Example only: replace with the latest stable version from NuGet -->
 
 <!-- Wrong for Toolkit (these are commercial) -->
 <!-- <PackageReference Include="Syncfusion.Blazor" Version="26.1.35" /> -->

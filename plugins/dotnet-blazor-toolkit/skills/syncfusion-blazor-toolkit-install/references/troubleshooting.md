@@ -6,10 +6,10 @@
 - Components appear in the page but have no colors, borders, or styling
 - DevTools shows missing CSS file (404 error on the theme link)
 
-**Root cause**: Theme CSS is not linked in `App.razor`, or the path/filename is incorrect.
+**Root cause**: Theme CSS is not linked in the app's host file, or the path/filename is incorrect.
 
 **Diagnosis**:
-1. Check `App.razor` (always use `App.razor` for all project types, not `index.html` or `_Host.cshtml`)
+1. Check the correct host file for the project type (`App.razor` for Blazor Server/Web App; `wwwroot/index.html` for Blazor WebAssembly)
 2. Look for a line like:
    ```html
    <link href="_content/Syncfusion.Blazor.Toolkit/styles/fluent.min.css" rel="stylesheet" />
@@ -25,7 +25,7 @@
 - Using wrong path: `_content/Syncfusion.Blazor.Toolkit/themes/` (should be `styles/`)
 - Using wrong theme: `bootstrap5.min.css`, `tailwind.min.css`, `material.min.css` (should be `fluent.min.css`)
 - Missing `.min` extension: `fluent.css` (should be `fluent.min.css`)
-- Linking in wrong file: `index.html` for WebAssembly or `_Host.cshtml` (should be `App.razor`)
+- Linking in the wrong host file: use `App.razor` for Blazor Server/Web App or `wwwroot/index.html` for Blazor WebAssembly
 
 **Fix**:
 ```html
@@ -126,7 +126,7 @@ Or for WebAssembly:
 2. If missing, install the package.
 3. Check `_Imports.razor` (or component file) for:
    ```razor
-   @using Syncfusion.Blazor
+   @using Syncfusion.Blazor.Toolkit
    ```
 4. If missing, add the namespace import.
 
@@ -137,7 +137,7 @@ Or for WebAssembly:
    ```
 2. Add to `_Imports.razor`:
    ```razor
-   @using Syncfusion.Blazor
+   @using Syncfusion.Blazor.Toolkit
    ```
 
 ---
@@ -315,7 +315,6 @@ Also ensure both projects have the NuGet package reference in their `.csproj` fi
 3. Clear browser cache (Ctrl+Shift+Delete) and reload (Ctrl+F5)
 4. For split Web App, ensure **both** Server and Client `Program.cs` files have the registration
 5. Verify the package is installed: `dotnet list package | grep Syncfusion.Blazor.Toolkit`
-```
 
 ---
 
@@ -325,9 +324,9 @@ Before troubleshooting further, verify:
 
 1. ✓ Package name is `Syncfusion.Blazor.Toolkit` (not commercial packages)
 2. ✓ `AddSyncfusionBlazorToolkit()` is in `Program.cs` (both in split Web Apps)
-3. ✓ `@using Syncfusion.Blazor` is in `_Imports.razor` (both in split Web Apps)
-4. ✓ Theme CSS link is `fluent.css` in the correct host file (`App.razor` or `index.html`)
-5. ✓ Theme filename is exactly `fluent.css` (not other theme names)
+3. ✓ `@using Syncfusion.Blazor.Toolkit` is in `_Imports.razor` (both in split Web Apps)
+4. ✓ Theme CSS link is `fluent.min.css` in the correct host file (`App.razor` for Blazor Server/Web App or `wwwroot/index.html` for Blazor WebAssembly)
+5. ✓ Theme filename is exactly `fluent.min.css` (not other theme names)
 6. ✓ Interactive components have `@rendermode InteractiveServer` or `@rendermode InteractiveWebAssembly`
 7. ✓ No license-key registration code is present
 8. ✓ Build completes without errors: `dotnet build`
