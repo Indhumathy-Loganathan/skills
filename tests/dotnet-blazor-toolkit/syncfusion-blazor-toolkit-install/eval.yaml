@@ -56,9 +56,9 @@ stimuli:
       - type: output-matches
         config:
           pattern: (?i)@using\s+Syncfusion\.Blazor\.Toolkit
-      - type: output-not-matches
+      - type: output-matches
         config:
-          pattern: (?i)\bApp\.razor\b.*\b(host file|link|css|stylesheet)\b
+          pattern: (?i)(not\s+App\.razor|instead\s+of\s+App\.razor)
       - type: output-not-contains
         config:
           substring: license key
