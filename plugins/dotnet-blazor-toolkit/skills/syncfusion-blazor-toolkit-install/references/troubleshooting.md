@@ -99,10 +99,10 @@ var app = builder.Build();
 }
 ```
 
-Or for WebAssembly:
+Or for a Blazor Web App using WebAssembly interactivity (`dotnet new blazor -int WebAssembly`):
 ```razor
 @page "/mypage"
-@rendermode InteractiveWebAssembly  <!-- Or this -->
+@rendermode InteractiveWebAssembly
 
 <SfButton @onclick="OnClick">Click me</SfButton>
 
