@@ -86,7 +86,8 @@ var app = builder.Build();
 **Fix**:
 ```razor
 @page "/mypage"
-@rendermode InteractiveServer  <!-- Add this line -->
+@* Add this line *@
+@rendermode InteractiveServer
 
 <SfButton @onclick="OnClick">Click me</SfButton>
 
