@@ -12,7 +12,7 @@ license: MIT
 compatibility: ".NET 8+, Blazor Server / WebAssembly / Auto / Static SSR"
 metadata:
   author: "Syncfusion Inc"
-  version: latest
+  version: "1.0.2"
 ---
 
 # Install Syncfusion Blazor Toolkit
@@ -120,6 +120,17 @@ For component-specific features, uncomment and include the appropriate namespace
 ```
 
 Always pick the host file from the Quick Decision Table above: `_Host.cshtml` for legacy Blazor Server, `App.razor` for Blazor Web App, or `wwwroot/index.html` for Blazor WebAssembly.
+
+## Common Mistakes
+
+| Mistake | Symptom | Fix |
+| --- | --- | --- |
+| CSS path uses `themes/` instead of `styles/` | Components are unstyled (404 in browser DevTools) | Change `_content/Syncfusion.Blazor.Toolkit/themes/fluent.css` to `.../styles/fluent.min.css` |
+| CSS linked in a component file instead of host file | Styling doesn't apply consistently | Move `<link>` tag to the host file's `<head>` section |
+| Using commercial `Syncfusion.Blazor` package | License key errors, missing components | Remove commercial package; use only `Syncfusion.Blazor.Toolkit` |
+| Added external Syncfusion CDN script tag | JavaScript conflicts or duplicate library errors | Remove external CDN script; Toolkit JS is bundled in the NuGet package |
+| Missing `@rendermode` on interactive components | Components don't respond to clicks/binding | Add `@rendermode InteractiveServer`, `InteractiveWebAssembly`, or `InteractiveAuto` |
+| Static SSR with interactive components | Buttons and inputs don't work | Switch to an interactive render mode (see Quick Decision Table) |
 
 ## Top Failure Symptoms
 

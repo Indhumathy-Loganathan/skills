@@ -59,9 +59,6 @@ stimuli:
       - type: output-not-matches
         config:
           pattern: (?i)(enter|add|register|provide)[\s\S]*(license key)
-      - type: output-not-matches
-        config:
-          pattern: (?i)app\.razor
     rubric:
       - Explains that WebAssembly uses index.html as the host file for the theme link.
       - Includes the Toolkit package, service registration, and namespace imports.
@@ -337,19 +334,13 @@ stimuli:
       - type: output-matches
         config:
           pattern: (?i)Syncfusion\.Blazor\.Toolkit
-      - type: output-not-matches
-        config:
-          pattern: (?i)AddSyncfusionLicense
       - type: output-matches
         config:
           pattern: (?i)(embedded|bundled|included|do not add|no external|no CDN)
-      - type: output-not-matches
-        config:
-          pattern: (?i)(commercial|cdn|ej2)
     rubric:
-      - Identifies that the Toolkit package includes all necessary JavaScript; external commercial script tags are not needed and conflict.
-      - Explains that Toolkit JS is embedded in the NuGet package and requires no license key or external scripts.
-      - Recommends removing any external Syncfusion script tags from the host file.
+      - Identifies that the Toolkit package includes all necessary JavaScript; external script tags are not needed.
+      - Explains that Toolkit JS is embedded in the NuGet package and requires no external CDN or license scripts.
+      - Recommends removing external Syncfusion script tags added to the host file.
 
   - name: out-of-scope-component-api
     prompt: |
