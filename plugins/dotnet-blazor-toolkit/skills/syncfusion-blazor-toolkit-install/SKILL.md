@@ -39,7 +39,7 @@ metadata:
 | Scenario | Package | Program.cs | Host file for CSS | Interactivity |
 | --- | --- | --- | --- | --- |
 | Blazor Server (legacy _Host.cshtml) | `Syncfusion.Blazor.Toolkit` | `builder.Services.AddSyncfusionBlazorToolkit()` | `_Host.cshtml` | Not required (always interactive) |
-| Blazor WebAssembly | `Syncfusion.Blazor.Toolkit` | `builder.Services.AddSyncfusionBlazorToolkit()` in the client app | `wwwroot/index.html` | `@rendermode InteractiveWebAssembly` |
+| Blazor WebAssembly (standalone) | `Syncfusion.Blazor.Toolkit` | `builder.Services.AddSyncfusionBlazorToolkit()` | `wwwroot/index.html` | Already interactive (no `@rendermode`) |
 | Blazor Web App (Auto) | `Syncfusion.Blazor.Toolkit` | Register in Server and Client projects that use Toolkit | `App.razor` | `@rendermode InteractiveAuto` |
 | Blazor Web App (Split Server/Client) | `Syncfusion.Blazor.Toolkit` | Register in Server and Client projects that use Toolkit | `App.razor` | `@rendermode InteractiveServer`, `InteractiveWebAssembly`, or `InteractiveAuto` |
 | Static SSR only | `Syncfusion.Blazor.Toolkit` | Register services as needed | `App.razor` or `index.html` | None; read-only only |
