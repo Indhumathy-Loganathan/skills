@@ -59,6 +59,9 @@ stimuli:
       - type: output-not-matches
         config:
           pattern: (?i)(enter|add|register|provide)[\s\S]*(license key)
+      - type: output-not-matches
+        config:
+          pattern: (?i)app\.razor
     rubric:
       - Explains that WebAssembly uses index.html as the host file for the theme link.
       - Includes the Toolkit package, service registration, and namespace imports.
