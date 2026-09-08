@@ -1,21 +1,21 @@
 ---
 name: syncfusion-blazor-toolkit-install
 description: >
-  Install and configure the open-source Syncfusion Blazor Toolkit
-  (Syncfusion.Blazor.Toolkit): package identity, AddSyncfusionBlazorToolkit(),
-  _Imports.razor, Fluent theme CSS, and interactive render modes for Server,
-  WebAssembly, and Blazor Web App.
+  Install and register the open-source Syncfusion Blazor Toolkit package,
+  configure AddSyncfusionBlazorToolkit(), link the Fluent theme, and apply
+  the correct interactive render mode for your app topology (Server / WASM / Auto).
   
-  USE FOR: first-time Toolkit setup, package identity, service registration,
-  theme linking, split-app dual registration, common install failures.
-  DO NOT USE FOR: commercial Syncfusion.Blazor* packages or license keys,
-  per-component API (buttons, charts, dialogs, etc.), Hybrid/MAUI hosting.
+  USE FOR: Toolkit setup, package verification, theme linking, split-app registration, render-mode troubleshooting.
+  DO NOT USE FOR: component API details (use author-component), Blazor project creation (use create-blazor-project),
+  commercial Syncfusion packages or license keys, Hybrid/MAUI.
 license: MIT
 compatibility: ".NET 8+, Blazor Server / WebAssembly / Auto / Static SSR"
 metadata:
   author: "Syncfusion Inc"
-  version: "1.0.2"
+  version: "latest"
 ---
+
+# Install Syncfusion Blazor Toolkit
 
 ## Core Rules
 
@@ -52,8 +52,11 @@ metadata:
 dotnet add package Syncfusion.Blazor.Toolkit
 ```
 
-### Program.cs (Blazor Web App / Modern Blazor Server)
+### Program.cs
 
+Match the render modes from the Quick Decision Table above. Do not add unused render modes.
+
+**For Blazor Web App (Auto or Server+Client split)**:
 ```csharp
 var builder = WebApplication.CreateBuilder(args);
 
@@ -68,6 +71,32 @@ var app = builder.Build();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
     .AddInteractiveWebAssemblyRenderMode();
+```
+
+**For Blazor Server only**:
+```csharp
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddRazorComponents()
+    .AddInteractiveServerComponents();
+
+builder.Services.AddSyncfusionBlazorToolkit();
+
+var app = builder.Build();
+
+app.MapRazorComponents<App>()
+    .AddInteractiveServerRenderMode();
+```
+
+**For Blazor WebAssembly**:
+```csharp
+var builder = WebAssemblyHostBuilder.CreateDefault(args);
+
+builder.RootComponents.Add<App>("#app");
+
+builder.Services.AddSyncfusionBlazorToolkit();
+
+await builder.Build().RunAsync();
 ```
 
 ### _Imports.razor
@@ -88,6 +117,8 @@ For component-specific features, include the appropriate namespace in `_Imports.
 <link href="_content/Syncfusion.Blazor.Toolkit/styles/fluent.min.css" rel="stylesheet" />
 ```
 
+Always pick the host file from the Quick Decision Table above: `App.razor` for Blazor Server/Web App or `wwwroot/index.html` for Blazor WebAssembly.
+
 ## Top Failure Symptoms
 
 - **Unstyled components**: the Fluent CSS link is missing, wrong, or placed in the wrong host file. See [Theme and host files](./references/theme-and-host-files.md).
@@ -98,7 +129,10 @@ For component-specific features, include the appropriate namespace in `_Imports.
 
 ## Next Steps
 
-After installation, use the component demos or component-specific guidance for API details; this skill only covers setup and configuration.
+After installation:
+- **Component API and examples**: See [official Syncfusion Blazor Toolkit demos](https://www.syncfusion.com/blazor-components)
+- **Component authoring**: Use [author-component](../../../author-component) skill for custom components
+- **New Blazor project**: Use [create-blazor-project](../../../create-blazor-project) skill for scaffolding
 
 ## References
 

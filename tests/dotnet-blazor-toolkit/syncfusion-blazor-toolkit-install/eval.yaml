@@ -351,12 +351,13 @@ stimuli:
       the series collection for a line chart? What are the available series types?
     expect_activation: false
     graders:
-      - type: output-not-matches
+      - type: prompt
         config:
-          pattern: (?i)\bseries\s+collection\b
-      - type: output-not-contains
-        config:
-          substring: LineSeriesType
+          prompt: |
+            Did the skill correctly decline this component API question and redirect to installation/configuration scope?
+            The model should not answer chart-series API or series-collection details.
+            Accept if the model declines, explains the skill scope, or redirects to official component docs.
+            Reject if it answers the API question directly or provides series configuration code.
       - type: output-matches
         config:
           pattern: (?i)(out of scope|not cover|component API|installation)
