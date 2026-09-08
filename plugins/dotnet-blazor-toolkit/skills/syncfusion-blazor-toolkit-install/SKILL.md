@@ -73,7 +73,7 @@ app.MapRazorComponents<App>()
     .AddInteractiveWebAssemblyRenderMode();
 ```
 
-**For Blazor Server only**:
+**For .NET 8+ Blazor Web App (server-only mode)**:
 ```csharp
 var builder = WebApplication.CreateBuilder(args);
 
