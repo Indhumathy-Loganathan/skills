@@ -15,6 +15,8 @@ metadata:
   version: "latest"
 ---
 
+# Install Syncfusion Blazor Toolkit
+
 ## Core Rules
 
 1. Use the exact package ID `Syncfusion.Blazor.Toolkit`.
@@ -117,13 +119,6 @@ For component-specific features, include the appropriate namespace in `_Imports.
 
 Always pick the host file from the Quick Decision Table above: `App.razor` for Blazor Server/Web App or `wwwroot/index.html` for Blazor WebAssembly.
 
-## Verify
-
-1. `dotnet build` completes without errors
-2. Run the app and open the browser DevTools Network tab
-3. Check that `fluent.min.css` loads with a 200 status (not 404)
-4. Add a Toolkit component to an interactive page with `@rendermode InteractiveServer` or `@rendermode InteractiveWebAssembly` (or `@rendermode InteractiveAuto`) and verify clicks or input work
-
 ## Top Failure Symptoms
 
 - **Unstyled components**: the Fluent CSS link is missing, wrong, or placed in the wrong host file. See [Theme and host files](./references/theme-and-host-files.md).
@@ -134,9 +129,10 @@ Always pick the host file from the Quick Decision Table above: `App.razor` for B
 
 ## Next Steps
 
-After installation, refer to:
-- **Component API**: [official Syncfusion Blazor Toolkit demos](https://www.syncfusion.com/blazor-components) or use [author-component](../../../author-component) skill
-- **Blazor fundamentals**: [create-blazor-project](../../../create-blazor-project) skill for new app scaffolding
+After installation:
+- **Component API and examples**: See [official Syncfusion Blazor Toolkit demos](https://www.syncfusion.com/blazor-components)
+- **Component authoring**: Use [author-component](../../../author-component) skill for custom components
+- **New Blazor project**: Use [create-blazor-project](../../../create-blazor-project) skill for scaffolding
 
 ## References
 

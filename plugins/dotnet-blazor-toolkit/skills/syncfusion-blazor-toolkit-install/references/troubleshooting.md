@@ -40,7 +40,7 @@
 
 ---
 
-## Problem: "Services not configured" or NullReferenceException
+## Problem: Services not configured
 
 **Symptoms**:
 - Runtime error when component tries to use Toolkit services
