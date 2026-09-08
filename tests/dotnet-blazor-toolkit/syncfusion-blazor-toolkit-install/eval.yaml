@@ -328,6 +328,29 @@ stimuli:
       - Treats the issue as a script-loading/configuration problem with static asset 404s.
       - Reinforces that Toolkit supports only the Fluent theme and that the package should be verified.
 
+  - name: commercial-script-tags-wrong
+    prompt: |
+      I'm setting up the Syncfusion Blazor Toolkit. I added the NuGet package, registered it in Program.cs,
+      but then I also added the commercial Syncfusion script tag from the CDN. Now I'm getting errors about
+      conflicts or duplicate library loading. Should I be using external script tags?
+    graders:
+      - type: output-matches
+        config:
+          pattern: (?i)Syncfusion\.Blazor\.Toolkit
+      - type: output-not-matches
+        config:
+          pattern: (?i)AddSyncfusionLicense
+      - type: output-matches
+        config:
+          pattern: (?i)(embedded|bundled|included|do not add|no external|no CDN)
+      - type: output-not-matches
+        config:
+          pattern: (?i)(commercial|cdn|ej2)
+    rubric:
+      - Identifies that the Toolkit package includes all necessary JavaScript; external commercial script tags are not needed and conflict.
+      - Explains that Toolkit JS is embedded in the NuGet package and requires no license key or external scripts.
+      - Recommends removing any external Syncfusion script tags from the host file.
+
   - name: out-of-scope-component-api
     prompt: |
       I'm building a chart dashboard with the Syncfusion Blazor Toolkit. How do I configure

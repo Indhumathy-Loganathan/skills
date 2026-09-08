@@ -12,7 +12,7 @@ license: MIT
 compatibility: ".NET 8+, Blazor Server / WebAssembly / Auto / Static SSR"
 metadata:
   author: "Syncfusion Inc"
-  version: "1.0.2"
+  version: latest
 ---
 
 # Install Syncfusion Blazor Toolkit
@@ -26,20 +26,22 @@ metadata:
 5. Use `@rendermode` for interactive Toolkit components in .NET 8+ Blazor Web App; legacy Blazor Server templates are already interactive (no `@rendermode` needed).
 6. In split Blazor Web Apps, register Toolkit in every project that uses Toolkit components.
 7. Never use commercial `Syncfusion.Blazor*` packages or license-key APIs for Toolkit.
-8. Keep this skill install-focused; use the references for details and troubleshooting.
+8. Toolkit JavaScript is embedded in the Syncfusion NuGet package; do not add commercial script tags or `AddSyncfusionLicense()` calls.
+9. Keep this skill install-focused; use the references for details and troubleshooting.
 
-## Don’ts
+## Don'ts
 
-- Don’t treat `Syncfusion.Blazor` or component-specific commercial packages as Toolkit dependencies.
-- Don’t rely on static SSR when the component must respond to clicks, binding, or dynamic updates.
-- Don’t turn this skill into a component API reference; use the demos or component skills for that.
+- Don't treat `Syncfusion.Blazor` or component-specific commercial packages as Toolkit dependencies.
+- Don't add external script tags or commercial Syncfusion license scripts; Toolkit JS is bundled with the package.
+- Don't rely on static SSR when the component must respond to clicks, binding, or dynamic updates.
+- Don't use this skill as a component API reference; consult the official Syncfusion Blazor Toolkit demos or documentation for API details.
 
 ## Quick Decision Table
 
 | Scenario | Package | Program.cs | Host file for CSS | Interactivity |
 | --- | --- | --- | --- | --- |
-| Blazor Server (legacy _Host.cshtml) | `Syncfusion.Blazor.Toolkit` | `builder.Services.AddSyncfusionBlazorToolkit()` | `_Host.cshtml` | Not required (always interactive) |
-| Blazor WebAssembly (standalone) | `Syncfusion.Blazor.Toolkit` | `builder.Services.AddSyncfusionBlazorToolkit()` | `wwwroot/index.html` | Already interactive (no `@rendermode`) |
+| Blazor Server (legacy _Host.cshtml) | `Syncfusion.Blazor.Toolkit` | `builder.Services.AddSyncfusionBlazorToolkit()` | `_Host.cshtml` | Interactive by default (no `@rendermode` directive) |
+| Blazor WebAssembly (standalone) | `Syncfusion.Blazor.Toolkit` | `builder.Services.AddSyncfusionBlazorToolkit()` | `wwwroot/index.html` | Interactive by default (no `@rendermode` directive) |
 | Blazor Web App (Auto) | `Syncfusion.Blazor.Toolkit` | Register in Server and Client projects that use Toolkit | `App.razor` | `@rendermode InteractiveAuto` |
 | Blazor Web App (Split Server/Client) | `Syncfusion.Blazor.Toolkit` | Register in Server and Client projects that use Toolkit | `App.razor` | `@rendermode InteractiveServer`, `InteractiveWebAssembly`, or `InteractiveAuto` |
 | Static SSR only | `Syncfusion.Blazor.Toolkit` | Register services as needed | `App.razor` or `index.html` | None; read-only only |
