@@ -212,7 +212,7 @@ Also ensure both projects have the NuGet package reference in their `.csproj` fi
 **Root cause**: The theme CSS path is incorrect or the Toolkit package is not installed.
 
 **Diagnosis**:
-1. Verify the package is installed: `dotnet list package | grep Syncfusion.Blazor.Toolkit`
+1. Verify the package is installed: `dotnet list package` and check if `Syncfusion.Blazor.Toolkit` is listed
 2. Check the link path in the host file:
    - Should be: `_content/Syncfusion.Blazor.Toolkit/styles/fluent.min.css`
    - Not: `_content/Syncfusion.Blazor/themes/...` (that's commercial)
@@ -248,7 +248,7 @@ Also ensure both projects have the NuGet package reference in their `.csproj` fi
 
 **Fix**:
 1. Ensure `AddSyncfusionBlazorToolkit()` is called in `Program.cs` before any components render
-2. Verify the package is installed: `dotnet list package | grep Syncfusion.Blazor.Toolkit`
+2. Verify the package is installed: `dotnet list package` and check if `Syncfusion.Blazor.Toolkit` is listed
 3. Clear browser cache (Ctrl+Shift+Delete) and reload
 4. Rebuild and republish: `dotnet build` and `dotnet publish`
 5. Check that no other scripts are conflicting (disable extensions, try incognito mode)
@@ -314,7 +314,7 @@ Also ensure both projects have the NuGet package reference in their `.csproj` fi
    ```
 3. Clear browser cache (Ctrl+Shift+Delete) and reload (Ctrl+F5)
 4. For split Web App, ensure **both** Server and Client `Program.cs` files have the registration
-5. Verify the package is installed: `dotnet list package | grep Syncfusion.Blazor.Toolkit`
+5. Verify the package is installed: `dotnet list package` and check if `Syncfusion.Blazor.Toolkit` is listed
 
 ---
 
@@ -327,7 +327,7 @@ Before troubleshooting further, verify:
 3. ✓ `@using Syncfusion.Blazor.Toolkit` is in `_Imports.razor` (both in split Web Apps)
 4. ✓ Theme CSS link is `fluent.min.css` in the correct host file (`App.razor` for Blazor Server/Web App or `wwwroot/index.html` for Blazor WebAssembly)
 5. ✓ Theme filename is exactly `fluent.min.css` (not other theme names)
-6. ✓ Interactive components have `@rendermode InteractiveServer` or `@rendermode InteractiveWebAssembly`
+6. ✓ Interactive components have `@rendermode InteractiveServer`, `@rendermode InteractiveWebAssembly`, or `@rendermode InteractiveAuto`
 7. ✓ No license-key registration code is present
 8. ✓ Build completes without errors: `dotnet build`
 9. ✓ Browser console shows no 404 or JavaScript errors
