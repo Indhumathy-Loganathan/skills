@@ -1,6 +1,8 @@
-# Package Identity Reference
+# Install Syncfusion Blazor Toolkit
 
-## Syncfusion.Blazor.Toolkit vs. Commercial Syncfusion.Blazor*
+## Package Identity Reference
+
+### Syncfusion.Blazor.Toolkit vs. Commercial Syncfusion.Blazor*
 
 ### The Open-Source Toolkit: Syncfusion.Blazor.Toolkit
 

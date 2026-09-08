@@ -1,35 +1,40 @@
 # Troubleshooting Toolkit Installation
 
-## Problem: Components render unstyled
+## Problem: Theme CSS not loading (404) or components unstyled
 
 **Symptoms**:
 - Components appear in the page but have no colors, borders, or styling
-- DevTools shows missing CSS file (404 error on the theme link)
+- DevTools Network tab shows the CSS file returns 404 (not found)
+- Or the file returns 200 but components still appear unstyled
 
-**Root cause**: Theme CSS is not linked in the app's host file, or the path/filename is incorrect.
+**Root cause**: Theme CSS link is missing, using the wrong path, wrong filename, wrong theme name, or linked in the wrong host file.
 
 **Diagnosis**:
-1. Check the correct host file for the project type (`App.razor` for Blazor Web App / modern Blazor Server; `_Host.cshtml` for legacy Blazor Server; `wwwroot/index.html` for Blazor WebAssembly)
-2. Look for a line like:
+1. Check the correct host file for your project type:
+   - Blazor Web App / modern Blazor Server: `App.razor`
+   - Legacy Blazor Server: `_Host.cshtml`
+   - Blazor WebAssembly: `wwwroot/index.html`
+2. Look for the CSS link in the `<head>` section:
    ```html
    <link href="_content/Syncfusion.Blazor.Toolkit/styles/fluent.min.css" rel="stylesheet" />
    ```
-3. If missing, add it in the `<Head>` section
-4. If present, verify:
-   - Path is exactly `_content/Syncfusion.Blazor.Toolkit/styles/` (note: `styles/`, not `themes/`)
-   - Filename is exactly `fluent.min.css` (Toolkit only supports Fluent theme)
-   - No typos or wrong theme names (e.g., `bootstrap5.min.css`, `tailwind.min.css` won't work)
-5. Open browser DevTools (F12) Network tab and check if the CSS file is loading (404 vs. 200 status)
+3. If found, verify:
+   - Path is **exactly** `_content/Syncfusion.Blazor.Toolkit/styles/` (not `themes/`)
+   - Filename is **exactly** `fluent.min.css` (Toolkit only supports Fluent; no Bootstrap, Tailwind, or Material)
+   - No typos; `.min` extension is required
+4. If missing, add it to the `<head>` section
+5. Open browser DevTools (F12) Network tab and verify the CSS file loads with status 200 (not 404)
 
 **Common mistakes**:
-- Using wrong path: `_content/Syncfusion.Blazor.Toolkit/themes/` (should be `styles/`)
-- Using wrong theme: `bootstrap5.min.css`, `tailwind.min.css`, `material.min.css` (should be `fluent.min.css`)
-- Missing `.min` extension: `fluent.css` (should be `fluent.min.css`)
-- Linking in the wrong host file: use `App.razor` for Blazor Server/Web App or `wwwroot/index.html` for Blazor WebAssembly
+- Wrong path: `_content/Syncfusion.Blazor.Toolkit/themes/fluent.min.css` (should be `styles/`)
+- Wrong theme name: `bootstrap5.min.css`, `tailwind.min.css`, `material.min.css` (must be `fluent.min.css`)
+- Missing `.min` extension: `fluent.css` (should be `.min.css`)
+- Linked in wrong host file: use `App.razor` for Blazor Web App/Server or `wwwroot/index.html` for WebAssembly
+- Linked in a component file instead of the host file (links in component files are ignored)
 
 **Fix**:
 ```html
-<!-- In the <Head> section of App.razor -->
+<!-- In the <head> section of the host file (App.razor for Web App, index.html for WASM, _Host.cshtml for legacy Server) -->
 <link href="_content/Syncfusion.Blazor.Toolkit/styles/fluent.min.css" rel="stylesheet" />
 ```
 
@@ -203,33 +208,6 @@ Also ensure both projects have the NuGet package reference in their `.csproj` fi
 
 ---
 
-## Problem: Theme CSS path 404 in browser DevTools
-
-**Symptoms**:
-- Browser DevTools shows 404 error for the theme CSS file
-- Components are unstyled
-
-**Root cause**: The theme CSS path is incorrect or the Toolkit package is not installed.
-
-**Diagnosis**:
-1. Verify the package is installed: `dotnet list package` and check if `Syncfusion.Blazor.Toolkit` is listed
-2. Check the link path in the host file:
-   - Should be: `_content/Syncfusion.Blazor.Toolkit/styles/fluent.min.css`
-   - Not: `_content/Syncfusion.Blazor/themes/...` (that's commercial)
-3. Verify the theme filename is correct (e.g., `fluent.min.css`, not `fluent.css`)
-
-**Fix**:
-1. Ensure package is installed:
-   ```bash
-   dotnet add package Syncfusion.Blazor.Toolkit
-   ```
-2. Verify the link is correct in the host file:
-   ```html
-   <link href="_content/Syncfusion.Blazor.Toolkit/styles/fluent.min.css" rel="stylesheet" />
-   ```
-
----
-
 ## Problem: JavaScript errors in browser console
 
 **Symptoms**:
@@ -252,33 +230,6 @@ Also ensure both projects have the NuGet package reference in their `.csproj` fi
 3. Clear browser cache (Ctrl+Shift+Delete) and reload
 4. Rebuild and republish: `dotnet build` and `dotnet publish`
 5. Check that no other scripts are conflicting (disable extensions, try incognito mode)
-
----
-
-## Problem: Theme CSS not loading (wrong theme name or path)
-
-**Symptoms**:
-- Components render unstyled even though you linked the CSS
-- Browser shows no 404 errors on the CSS file
-- The Toolkit supports **only Fluent theme**
-
-**Root cause**: Using a theme other than `fluent.min.css` (e.g., `bootstrap5.min.css`, `tailwind.min.css`, etc.), or using wrong path/filename.
-
-**Diagnosis**:
-1. Check the CSS link in `App.razor` `<Head>` section
-2. Verify the filename is exactly `fluent.min.css` (with `.min`)
-3. Confirm the path is exactly `_content/Syncfusion.Blazor.Toolkit/styles/` (note: `styles/`, not `themes/`)
-
-**Fix**:
-```html
-<!-- Correct: Fluent theme in styles directory with .min extension -->
-<link href="_content/Syncfusion.Blazor.Toolkit/styles/fluent.min.css" rel="stylesheet" />
-
-<!-- Wrong: Other themes are not supported -->
-<!-- <link href="_content/Syncfusion.Blazor.Toolkit/styles/bootstrap5.min.css" rel="stylesheet" /> -->
-<!-- <link href="_content/Syncfusion.Blazor.Toolkit/themes/fluent.css" rel="stylesheet" /> -->
-<!-- <link href="_content/Syncfusion.Blazor.Toolkit/styles/tailwind.min.css" rel="stylesheet" /> -->
-```
 
 ---
 
