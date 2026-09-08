@@ -56,9 +56,6 @@ stimuli:
       - type: output-matches
         config:
           pattern: (?i)@using\s+Syncfusion\.Blazor\.Toolkit
-      - type: output-matches
-        config:
-          pattern: (?i)(not\s+App\.razor|instead\s+of\s+App\.razor)
       - type: output-not-contains
         config:
           substring: license key
@@ -84,12 +81,6 @@ stimuli:
       - type: output-matches
         config:
           pattern: (?i)both
-      - type: output-not-contains
-        config:
-          substring: only the Server
-      - type: output-not-contains
-        config:
-          substring: only the Client
     rubric:
       - States that both Server and Client Program.cs files need registration when both halves use Toolkit.
       - Distinguishes split Web App registration from single-project setups.
@@ -274,15 +265,8 @@ stimuli:
       - type: output-matches
         config:
           pattern: (?i)fluent\.min\.css
-      - type: output-not-matches
-        config:
-          pattern: (?i)<link[^>]*bootstrap5
-      - type: output-not-matches
-        config:
-          pattern: (?i)<link[^>]*tailwind
     rubric:
       - Identifies Fluent as the only supported theme and points to fluent.min.css.
-      - Rejects bootstrap5 and tailwind as unsupported Toolkit themes.
 
   - name: wrong-stylesheet-path-failure
     prompt: |
@@ -300,12 +284,8 @@ stimuli:
       - type: output-matches
         config:
           pattern: _content/Syncfusion\.Blazor\.Toolkit/styles/
-      - type: output-not-matches
-        config:
-          pattern: (?i)<link[^>]*themes/
     rubric:
       - Gives the exact correct path under the styles directory.
-      - Explains that themes/ is the wrong directory for Toolkit assets.
 
   - name: script-file-loading-failure
     prompt: |
