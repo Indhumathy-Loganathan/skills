@@ -30,7 +30,7 @@
 - Wrong theme name: `bootstrap5.min.css`, `tailwind.min.css`, `material.min.css` (must be `fluent.min.css`)
 - Missing `.min` extension: `fluent.css` (should be `.min.css`)
 - Linked in wrong host file: use `App.razor` for Blazor Web App/Server or `wwwroot/index.html` for WebAssembly
-- Linked in a component file instead of the host file (links in component files are ignored)
+- Linked in a component file instead of the host file (always place it in the host file's `<head>` section for best results)
 
 **Fix**:
 ```html
