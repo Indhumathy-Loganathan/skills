@@ -12,7 +12,7 @@ license: MIT
 compatibility: ".NET 8+, Blazor Server / WebAssembly / Auto / Static SSR"
 metadata:
   author: "Syncfusion Inc"
-  version: "latest"
+  version: "1.0.2"
 ---
 
 # Install Syncfusion Blazor Toolkit
@@ -129,10 +129,7 @@ Always pick the host file from the Quick Decision Table above: `App.razor` for B
 
 ## Next Steps
 
-After installation:
-- **Component API and examples**: See [official Syncfusion Blazor Toolkit demos](https://www.syncfusion.com/blazor-components)
-- **Component authoring**: Use [author-component](../../../author-component) skill for custom components
-- **New Blazor project**: Use [create-blazor-project](../../../create-blazor-project) skill for scaffolding
+After installation, use the component demos or component-specific guidance for API details; this skill only covers setup and configuration.
 
 ## References
 
