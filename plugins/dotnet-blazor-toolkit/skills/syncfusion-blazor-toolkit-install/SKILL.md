@@ -23,7 +23,7 @@ metadata:
 2. Call `AddSyncfusionBlazorToolkit()` in `Program.cs` before `builder.Build()`.
 3. Import `@using Syncfusion.Blazor.Toolkit` in `_Imports.razor`; add component namespaces such as `@using Syncfusion.Blazor.Toolkit.Buttons` only when a component needs them.
 4. Link `_content/Syncfusion.Blazor.Toolkit/styles/fluent.min.css` in the app host file.
-5. Use `@rendermode` for interactive Toolkit components; static SSR is read-only only.
+5. Use `@rendermode` for interactive Toolkit components in .NET 8+ Blazor Web App; legacy Blazor Server templates are already interactive (no `@rendermode` needed).
 6. In split Blazor Web Apps, register Toolkit in every project that uses Toolkit components.
 7. Never use commercial `Syncfusion.Blazor*` packages or license-key APIs for Toolkit.
 8. Keep this skill install-focused; use the references for details and troubleshooting.
@@ -38,7 +38,7 @@ metadata:
 
 | Scenario | Package | Program.cs | Host file for CSS | Interactivity |
 | --- | --- | --- | --- | --- |
-| Blazor Server (legacy _Host.cshtml) | `Syncfusion.Blazor.Toolkit` | `builder.Services.AddSyncfusionBlazorToolkit()` | `_Host.cshtml` | `@rendermode InteractiveServer` |
+| Blazor Server (legacy _Host.cshtml) | `Syncfusion.Blazor.Toolkit` | `builder.Services.AddSyncfusionBlazorToolkit()` | `_Host.cshtml` | Not required (always interactive) |
 | Blazor WebAssembly | `Syncfusion.Blazor.Toolkit` | `builder.Services.AddSyncfusionBlazorToolkit()` in the client app | `wwwroot/index.html` | `@rendermode InteractiveWebAssembly` |
 | Blazor Web App (Auto) | `Syncfusion.Blazor.Toolkit` | Register in Server and Client projects that use Toolkit | `App.razor` | `@rendermode InteractiveAuto` |
 | Blazor Web App (Split Server/Client) | `Syncfusion.Blazor.Toolkit` | Register in Server and Client projects that use Toolkit | `App.razor` | `@rendermode InteractiveServer`, `InteractiveWebAssembly`, or `InteractiveAuto` |
@@ -117,7 +117,7 @@ For component-specific features, include the appropriate namespace in `_Imports.
 <link href="_content/Syncfusion.Blazor.Toolkit/styles/fluent.min.css" rel="stylesheet" />
 ```
 
-Always pick the host file from the Quick Decision Table above: `App.razor` for Blazor Server/Web App or `wwwroot/index.html` for Blazor WebAssembly.
+Always pick the host file from the Quick Decision Table above: `_Host.cshtml` for legacy Blazor Server, `App.razor` for Blazor Web App, or `wwwroot/index.html` for Blazor WebAssembly.
 
 ## Top Failure Symptoms
 
