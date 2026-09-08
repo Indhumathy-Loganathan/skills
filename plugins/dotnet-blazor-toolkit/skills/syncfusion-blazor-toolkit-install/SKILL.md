@@ -105,11 +105,11 @@ await builder.Build().RunAsync();
 @using Syncfusion.Blazor.Toolkit
 
 @* Optional: Add component-specific namespaces only when using those components *@
-@using Syncfusion.Blazor.Toolkit.Buttons
-@using Syncfusion.Blazor.Toolkit.Calendars
+@* @using Syncfusion.Blazor.Toolkit.Buttons *@
+@* @using Syncfusion.Blazor.Toolkit.Calendars *@
 ```
 
-For component-specific features, include the appropriate namespace in `_Imports.razor` as shown above.
+For component-specific features, uncomment and include the appropriate namespace in `_Imports.razor` as needed.
 
 ### Host file CSS
 

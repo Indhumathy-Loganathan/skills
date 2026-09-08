@@ -30,7 +30,7 @@ stimuli:
           substring: Syncfusion.Blazor.Buttons
       - type: output-not-matches
         config:
-          pattern: (?i)(enter|add|register|provide).*(license key)
+          pattern: (?i)(enter|add|register|provide)[\s\S]*(license key)
       - type: output-not-contains
         config:
           substring: AddSyncfusionLicense
@@ -193,7 +193,7 @@ stimuli:
           pattern: (?i)AddSyncfusionBlazorToolkit
       - type: output-not-matches
         config:
-          pattern: (?i)(enter|add|register|provide).*(license key)
+          pattern: (?i)(enter|add|register|provide)[\s\S]*(license key)
     rubric:
       - Identifies the commercial package as wrong for Toolkit scenarios and recommends removing it.
       - Replaces licensing guidance with the Toolkit service registration method.
