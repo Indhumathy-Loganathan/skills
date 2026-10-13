@@ -1,44 +1,28 @@
-﻿# Troubleshooting Toolkit Installation
+# Troubleshooting Toolkit Installation
 
-> **Framework support.** `Syncfusion.Blazor.Toolkit` 1.0.2 targets `net8.0`, `net9.0`, and `net10.0`. Always check the project's `<TargetFramework>` before installation. On `net6.0`, `net7.0`, or older frameworks, the package may restore successfully, but Toolkit assemblies are not available to the application, so the build later fails with errors such as `CS0246: The type or namespace name 'Syncfusion' could not be found`. Do not proceed with Toolkit installation on unsupported frameworks. Recommend upgrading the application to .NET 8 or later first, then continue with the installation steps.
+> **Framework support.** `Syncfusion.Blazor.Toolkit` 2.0.0 targets `net8.0`, `net9.0`, and `net10.0`. Always check the project's `<TargetFramework>` before installation. On `net6.0`, `net7.0`, or older frameworks, the package may restore successfully, but Toolkit assemblies are not available to the application, so the build later fails with errors such as `CS0246: The type or namespace name 'Syncfusion' could not be found`. Do not proceed with Toolkit installation on unsupported frameworks. Recommend upgrading the application to .NET 8 or later first, then continue with the installation steps.
 
-## Problem: Theme CSS not loading (404) or components unstyled
+## Problem: Components unstyled
 
 **Symptoms**:
 - Components appear in the page but have no colors, borders, or styling
-- DevTools Network tab shows the CSS file returns 404 (not found)
-- Or the file returns 200 but components still appear unstyled
+- Or only some visual tokens are missing
 
-**Root cause**: Theme CSS link is missing, using the wrong path, wrong filename, wrong theme name, or linked in the wrong host file.
+**Root cause (2.0)** — theming does **not** depend on linking `fluent.min.css`. Check in order:
+1. Package `Syncfusion.Blazor.Toolkit` 2.0+ is referenced and restored.
+2. `AddSyncfusionBlazorToolkit()` is registered on every host that renders Toolkit components.
+3. `@using Syncfusion.Blazor.Toolkit` is in `_Imports.razor` of the project that owns the markup.
+4. At least one Toolkit component is in the render tree (so `SfThemeRoot` emits the shared layer), **or** an explicit `<SfThemeRoot />` is present.
+5. The template still links the app's own styles (`app.css`, `{Project}.styles.css`); those were not deleted while editing the host.
+6. Custom CSS written for 1.x unscoped class names may need `::deep` or isolation-aware selectors.
 
-**Diagnosis**:
-1. Check the correct host file for your project type:
-   - Blazor Web App: `Components/App.razor`
-   - Legacy Blazor Server: `_Host.cshtml`
-   - Blazor WebAssembly: `wwwroot/index.html`
-2. Look for the CSS link in the `<head>` section:
-   ```html
-   <link href="_content/Syncfusion.Blazor.Toolkit/styles/fluent.min.css" rel="stylesheet" />
-   ```
-3. If found, verify:
-   - Path is **exactly** `_content/Syncfusion.Blazor.Toolkit/styles/` (not `themes/`)
-   - Filename is `fluent.min.css` or `highcontrast.min.css`. Bootstrap, Tailwind, and Material files are not in this package.
-   - No typos; `.min` extension is required
-4. If missing, add it to the `<head>` section
-5. Open browser DevTools (F12) Network tab and verify the CSS file loads with status 200 (not 404)
-
-**Common mistakes**:
-- Wrong path: `_content/Syncfusion.Blazor.Toolkit/themes/fluent.min.css` (should be `styles/`)
-- Wrong stylesheet name: `bootstrap5.min.css`, `tailwind.min.css`, `material.min.css` (use `fluent.min.css` or `highcontrast.min.css`)
-- Missing `.min` extension: `fluent.css` (should be `.min.css`)
-- Linked in wrong host file: use `Components/App.razor` for a Blazor Web App, `_Host.cshtml` for legacy Blazor Server, or `wwwroot/index.html` for standalone WebAssembly
-- Linked in a component file instead of the host file (always place it in the host file's `<head>` section for best results)
-
-**Fix**:
+**1.x leftovers**: If the host still has
 ```html
-<!-- In the <head> section of the host file (App.razor for Web App, index.html for WASM, _Host.cshtml for legacy Server) -->
 <link href="_content/Syncfusion.Blazor.Toolkit/styles/fluent.min.css" rel="stylesheet" />
 ```
+remove it on a 2.0 upgrade; it is not part of the required setup. A 404 on that path after removal is expected and is not a failure.
+
+**Fix**: Install/register/import as above; ensure a Toolkit component or `<SfThemeRoot />` is rendered; keep template CSS links; adjust custom overrides for isolation if needed.
 
 ---
 
@@ -46,7 +30,7 @@
 
 **Symptoms**:
 - The page returns HTTP 500 (also for static SSR pages that render a Toolkit component)
-- The log shows: `InvalidOperationException: Cannot provide a value for property 'SyncfusionService' on type 'Syncfusion.Blazor.Toolkit.Buttons.SfButton'. There is no registered service of type 'Syncfusion.Blazor.Toolkit.SyncfusionBlazorToolkitService'.`
+- The log shows: `InvalidOperationException: Cannot provide a value for property 'SyncfusionService' on type 'Syncfusion.Blazor.Toolkit.SfButton'. There is no registered service of type 'Syncfusion.Blazor.Toolkit.SyncfusionBlazorToolkitService'.`
 
 **Root cause**: `AddSyncfusionBlazorToolkit()` is not called on a host that renders a Toolkit component.
 
@@ -87,7 +71,7 @@ builder.Services.AddSyncfusionBlazorToolkit();         // before builder.Build()
 @page "/mypage"
 @* Add one mode that matches the app's configured interactivity *@
 @rendermode InteractiveServer
-@using Syncfusion.Blazor.Toolkit.Buttons
+@using Syncfusion.Blazor.Toolkit
 
 <SfButton OnClick="OnClick">Click me</SfButton>
 
@@ -103,7 +87,7 @@ Or, for a per-page Blazor Web App created with `dotnet new blazor -int WebAssemb
 ```razor
 @page "/mypage"
 @rendermode InteractiveWebAssembly
-@using Syncfusion.Blazor.Toolkit.Buttons
+@using Syncfusion.Blazor.Toolkit
 
 <SfButton OnClick="OnClick">Click me</SfButton>
 
@@ -129,7 +113,7 @@ Or, for a per-page Blazor Web App created with `dotnet new blazor -int WebAssemb
 **Diagnosis**:
 1. Check the `.csproj` file for:
    ```xml
-   <PackageReference Include="Syncfusion.Blazor.Toolkit" Version="1.0.2" />
+   <PackageReference Include="Syncfusion.Blazor.Toolkit" Version="2.0.0" />
    ```
 2. Check `<TargetFramework>` is `net8.0`, `net9.0`, or `net10.0`.
 
@@ -138,7 +122,7 @@ Or, for a per-page Blazor Web App created with `dotnet new blazor -int WebAssemb
    ```bash
    dotnet add package Syncfusion.Blazor.Toolkit
    ```
-2. A root `@using Syncfusion.Blazor.Toolkit` in `_Imports.razor` is optional and does not affect `.cs` files.
+2. A root `@using Syncfusion.Blazor.Toolkit` in `_Imports.razor` is required for component markup and does not affect `.cs` files by itself.
 
 ---
 
@@ -146,18 +130,30 @@ Or, for a per-page Blazor Web App created with `dotnet new blazor -int WebAssemb
 
 **Symptoms**:
 - Build **succeeds** with warning `RZ10012: Found markup element with unexpected name 'SfButton'. If this is intended to be a component, add a @using directive for its namespace.`
-- At runtime the tag renders as an unknown HTML element: no `e-btn` class, no styling, and `OnClick` does nothing
+- At runtime the tag renders as an unknown HTML element: no styling, and `OnClick` does nothing
 - There is **no** `CS0246` for a missing component namespace in a `.razor` file
 
-**Root cause**: Toolkit **component types do not live in the root `Syncfusion.Blazor.Toolkit` namespace**. Each component family has its own child namespace (`Syncfusion.Blazor.Toolkit.Buttons`, `Syncfusion.Blazor.Toolkit.Calendars`, `Syncfusion.Blazor.Toolkit.Inputs`, etc.). The root namespace holds enums and the registration extension class, not components.
+**Root cause (2.0)**: All public component types live in the single root namespace `Syncfusion.Blazor.Toolkit`. Domain-specific namespaces from 1.x (`Syncfusion.Blazor.Toolkit.Buttons`, `.Calendars`, `.Charts`, `.Inputs`, `.Popups`, `.Spinner`, etc.) were removed. The root namespace holds components, enums, and the registration extension class.
 
 **Fix**:
-1. Add the **per-component namespace** to `_Imports.razor`. For example, when using `SfButton` (the root using is optional):
+1. Add the single root namespace to `_Imports.razor`:
    ```razor
-   @using Syncfusion.Blazor.Toolkit.Buttons
+   @using Syncfusion.Blazor.Toolkit
    ```
-2. Match the component to its namespace (verified against package 1.0.2): `SfButton`, `SfButtonGroup` → `Buttons`; `SfCalendar`, `SfDatePicker`, `SfDateTimePicker`, `SfTimePicker` → `Calendars`; `SfTextBox`, `SfTextArea`, `SfNumericTextBox`, `SfCheckBox`, `SfRadioButton`, `SfSwitch`, `SfUploader` → `Inputs`; `SfChart` → `Charts`; `SfDialog`, `SfTooltip` → `Popups`; `SfSpinner` → `Spinner`. There is no Toolkit grid component. If a type still does not resolve, check the installed version's IntelliSense.
-3. The per-component namespace **must** be added to the project that owns the component. In a split Web App, add `@using Syncfusion.Blazor.Toolkit.Buttons` to **both** the Server and `.Client` `_Imports.razor` files when both render `SfButton`.
+2. Remove any leftover 1.x domain-specific `@using` directives; they no longer resolve.
+3. The root namespace **must** be added to the project that owns the component. In a split Web App, add `@using Syncfusion.Blazor.Toolkit` to **both** the Server and `.Client` `_Imports.razor` files when both render Toolkit components.
+
+---
+
+## Problem: Unresolved types after upgrading from Toolkit 1.x to 2.0
+
+**Symptoms**:
+- `CS0234: The type or namespace name 'Buttons' does not exist in the namespace 'Syncfusion.Blazor.Toolkit'`
+- Or similar for `Calendars`, `Charts`, `Inputs`, `Popups`, `Spinner`
+
+**Root cause**: Namespace consolidation in 2.0 removed all domain-specific namespaces.
+
+**Fix**: Replace every `@using Syncfusion.Blazor.Toolkit.<Domain>` and every fully qualified type that used a child namespace with the single root `Syncfusion.Blazor.Toolkit`.
 
 ---
 
@@ -191,7 +187,7 @@ Or, for a per-page Blazor Web App created with `dotnet new blazor -int WebAssemb
 - Also register Toolkit in the server `Program.cs` while prerendering is enabled. Keep the generated `AddInteractiveWebAssemblyComponents()` and `AddInteractiveWebAssemblyRenderMode()` calls.
 - Leave the template's `AddAdditionalAssemblies(...)` call on `MapRazorComponents<App>()` untouched.
 
-Also ensure both projects have the NuGet package reference in their `.csproj` files and both have namespace imports in their `_Imports.razor` files. Add the per-component namespace (e.g. `@using Syncfusion.Blazor.Toolkit.Buttons` for `SfButton`) to both `_Imports.razor` files when both render the component.
+Also ensure both projects have the NuGet package reference in their `.csproj` files and both have `@using Syncfusion.Blazor.Toolkit` in their `_Imports.razor` files.
 
 ---
 
@@ -281,14 +277,13 @@ Also ensure both projects have the NuGet package reference in their `.csproj` fi
 Before troubleshooting further, verify:
 
 1. ✓ `<TargetFramework>` in the `.csproj` is `net8.0`, `net9.0`, or `net10.0`. If it is older, recommend upgrading first.
-2. ✓ Package name is `Syncfusion.Blazor.Toolkit` (not a commercial `Syncfusion.Blazor.*` package)
+2. ✓ Package name is `Syncfusion.Blazor.Toolkit` (not a commercial `Syncfusion.Blazor.*` package), version 2.0.0 or newer preferred
 3. ✓ `using Syncfusion.Blazor.Toolkit;` and `AddSyncfusionBlazorToolkit()` are in `Program.cs` (in both Server and Client projects of a split Web App)
-4. ✓ `@using Syncfusion.Blazor.Toolkit` is in `_Imports.razor` (in both projects of a split Web App). Per-component namespaces (e.g. `@using Syncfusion.Blazor.Toolkit.Buttons` for `SfButton`) are added to the `_Imports.razor` of every project that renders the component.
+4. ✓ `@using Syncfusion.Blazor.Toolkit` is in `_Imports.razor` (in both projects of a split Web App). Do **not** use domain-specific namespaces from Toolkit 1.x.
 5. ✓ The template's `AddAdditionalAssemblies(...)` and `AddInteractive*` calls are unchanged; only the Toolkit `using` and `AddSyncfusionBlazorToolkit()` were added.
-6. ✓ Stylesheet link is `fluent.min.css` or `highcontrast.min.css` in the host file's `<head>` (`Components/App.razor` for a Blazor Web App, `_Host.cshtml` for legacy Blazor Server, `wwwroot/index.html` for standalone WebAssembly). The link is **added** to the existing file — `HeadOutlet`, `Routes`, the render-mode directive, and the framework script tag are preserved.
-7. ✓ Path uses `styles/`, not `themes/`, and keeps the `.min` extension
-8. ✓ Blazor Web App interactivity is inherited from `Routes` or declared once. Do not add `@rendermode` to legacy Server or standalone WebAssembly
-9. ✓ Commercial packages and `SyncfusionLicenseProvider.RegisterLicense(...)` remain only where commercial components are still used
-10. ✓ Build completes without errors: `dotnet build`
-11. ✓ Browser console shows no 404 or JavaScript errors
-
+6. ✓ No Toolkit theme `<link>` is required; 1.x `fluent.min.css` / `highcontrast.min.css` links may be removed. Host still has template `app.css` / `{Project}.styles.css` links. `SfThemeRoot` runs via Toolkit components (or an explicit tag).
+7. ✓ Blazor Web App interactivity is inherited from `Routes` or declared once. Do not add `@rendermode` to legacy Server or standalone WebAssembly
+8. ✓ Commercial packages and `SyncfusionLicenseProvider.RegisterLicense(...)` remain only where commercial components are still used
+9. ✓ Build completes without errors: `dotnet build`
+10. ✓ Browser console shows no unexpected 404 or JavaScript errors (a 404 on a removed 1.x theme path is fine)
+11. ✓ After a 1.x → 2.0 upgrade, custom CSS overrides account for CSS isolation if needed
