@@ -10,12 +10,12 @@ From Toolkit **2.0**, theming no longer requires linking `fluent.min.css` or `hi
 
 Two tiers — neither requires a Toolkit theme `<link>` in the host:
 
-1. **Shared theme layer (`SfThemeRoot`)**  
-   Writes a single `<style id="sf-theme-root">` element containing `:root` design tokens, base/utility styles, the icon font, keyframes, and dark / high-contrast / forced-colors rules.  
-   Every consumer-facing root Toolkit component renders `<SfThemeRoot />` as the **previous sibling** of its root element. Only one owner per Blazor renderer emits the style; ownership recovers on dispose.  
+1. **Shared theme layer (`SfThemeRoot`)**
+   Writes a single `<style id="sf-theme-root">` element containing `:root` design tokens, base/utility styles, the icon font, keyframes, and dark / high-contrast / forced-colors rules.
+   Every consumer-facing root Toolkit component renders `<SfThemeRoot />` as the **previous sibling** of its root element. Only one owner per Blazor renderer emits the style; ownership recovers on dispose.
    **No consumer configuration** is required when Toolkit components are present. Place an explicit `<SfThemeRoot />` only when theme emission is needed without a Toolkit component in the tree. A JavaScript fallback can inject the theme into `document.head` only when no owner exists for that renderer.
 
-2. **Component styles (CSS isolation)**  
+2. **Component styles (CSS isolation)**
    Migrated to Blazor CSS isolation (`.razor.css` → scoped bundle). Styles ship with the NuGet package and are applied through the isolation / static-web-assets pipeline. Selectors and cascade may differ from the 1.x global stylesheet. App-level overrides that targeted unscoped toolkit class names may need the `::deep` combinator or other isolation-aware adjustments.
 
 ## What the host file should contain
