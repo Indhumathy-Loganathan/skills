@@ -448,8 +448,6 @@ stimuli:
       - Asks for or reads the TFM before installing; does not assume net8+.
 
   # ---------------------------------------------------------------------------
-  # Dormancy / out of scope
-  # ---------------------------------------------------------------------------
   # Activation continuity: terse legitimate install prompts must end with a concrete answer
   # ---------------------------------------------------------------------------
   - name: terse-install-request-continues-after-load
@@ -458,10 +456,10 @@ stimuli:
       risk: stops-after-skill-load
       journey: terse-install-continuity
     prompt: |
-      I have a .NET 9 Blazor Server app. Add the open-source Syncfusion Blazor Toolkit to it.
+      I have a .NET 9 Blazor Web App (Interactive Server, per-page). Add the open-source Syncfusion Blazor Toolkit to it.
     environment:
       commands:
-        - dotnet new blazorserver --framework net9.0 --no-https --force
+        - dotnet new blazor -int Server --framework net9.0 --no-https --force
     graders:
       - type: file-contains
         config:
@@ -497,12 +495,19 @@ stimuli:
       - type: output-contains
         config:
           substring: AddSyncfusionBlazorToolkit
+      - type: output-matches
+        config:
+          pattern: '(?i)@?using\s+Syncfusion\.Blazor\.Toolkit\s*;?'
       - type: prompt
     rubric:
       - Gives concrete package, registration and namespace-import steps in the final answer itself.
       - Keeps the template's existing RootComponents lines untouched.
       - Does not instruct linking a Toolkit theme stylesheet.
 
+  #
+
+  # ---------------------------------------------------------------------------
+  # Dormancy / out of scope
   # ---------------------------------------------------------------------------
   - name: out-of-scope-component-api
     tags:
