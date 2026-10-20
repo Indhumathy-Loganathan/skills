@@ -524,7 +524,7 @@ stimuli:
       - Treats grid column binding and row-selection events as component API usage outside install/registration guidance.
       - Does not install packages, register Toolkit services, or add theme links as the answer.
       - Does not hijack the request with Toolkit install guidance.
-      - The Toolkit install skill stayed dormant: the answer does not rely on it and treats this request as outside the scope of Toolkit setup.
+      - "The Toolkit install skill stayed dormant: the answer does not rely on it and treats this request as outside the scope of Toolkit setup."
 
   - name: out-of-scope-project-creation
     tags:
@@ -544,7 +544,7 @@ stimuli:
       - Handles project creation with the standard Blazor template guidance (dotnet new blazor and its options).
       - Does not install Syncfusion packages or register Toolkit services, since none were requested.
       - Does not hijack the request with Toolkit install guidance.
-      - The Toolkit install skill stayed dormant: the answer does not rely on it and treats this request as outside the scope of Toolkit setup.
+      - "The Toolkit install skill stayed dormant: the answer does not rely on it and treats this request as outside the scope of Toolkit setup."
 
   - name: out-of-scope-maui-blazor-hybrid
     tags:
@@ -564,4 +564,4 @@ stimuli:
       - Recognizes MAUI Blazor Hybrid is outside this skill's host/render-mode guidance.
       - Does not instruct opening Components/App.razor or _Host.cshtml as the Hybrid setup path.
       - Does not hijack the request with Web App install guidance.
-      - The Toolkit install skill stayed dormant: the answer does not rely on it and treats this request as outside the scope of Toolkit setup.
+      - "The Toolkit install skill stayed dormant: the answer does not rely on it and treats this request as outside the scope of Toolkit setup."
