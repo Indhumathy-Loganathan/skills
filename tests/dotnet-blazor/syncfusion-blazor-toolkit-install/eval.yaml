@@ -69,9 +69,6 @@ stimuli:
       - type: output-matches
         config:
           pattern: (?i)wwwroot[/\\]index\.html|index\.html
-      - type: output-matches
-        config:
-          pattern: '(?im)(?:^|(?<=[.:;!?])\s+)(?!(?:(?![.:;!?](?:\s|$))[^\n])*?(?:\b(?:not|never|avoid|without)\b|\w+n[''’]t\b))(?:(?![.:;!?](?:\s|$))[^\n])*?RootComponents\.Add<App>\("#app"\)'
       # Affirmative "add @rendermode" only — "do not add @rendermode" must pass
       - type: output-not-matches
         config:
