@@ -17,9 +17,6 @@ description: >
 
 # Plan a Blazor UI Change
 
-> **Continue after loading.** Loading this skill is the start of the task, not the end. In the same turn, do the work the user asked for (write the files or give the concrete answer), then finish with a final message that contains the actual code or steps, not just a summary of files changed. Read a reference file only if the question needs it.
-
-
 When asked to build a complex UI feature, **plan the component decomposition first, then immediately implement it**. A single monolithic page component is almost never the right answer — break the UI into focused, composable components.
 
 ## Planning Workflow

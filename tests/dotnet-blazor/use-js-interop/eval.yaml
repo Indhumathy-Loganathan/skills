@@ -1,14 +1,10 @@
 name: use-js-interop
 description: Evaluates the dotnet-blazor/use-js-interop skill
 type: capability
-defaults:
+config:
   timeout: 10m
 stimuli:
   - name: Auto-saving notepad that survives page reloads
-    tags:
-      capability: use-js-interop
-      risk: baseline-misses-use-js-interop-guidance
-      journey: auto-saving-notepad-that-survives-page-reloads
     prompt: |
       I need a `Notepad` component for my Blazor Web App.
 
@@ -48,10 +44,6 @@ stimuli:
       - The clear function removes stored data and resets the beforeunload guard in one operation
       - Uses sessionStorage (or localStorage) for persistence, the beforeunload event for the unsaved-changes prompt, and setInterval/clearInterval for the auto-save timer
   - name: User activity tracker that detects idle timeout
-    tags:
-      capability: use-js-interop
-      risk: baseline-misses-use-js-interop-guidance
-      journey: user-activity-tracker-that-detects-idle-timeout
     prompt: |
       I need a `UserActivityTracker` component for my Blazor Web App.
 
@@ -87,10 +79,6 @@ stimuli:
       - Manages the idle timeout timer in JavaScript using setTimeout/clearTimeout — not via .NET Task.Delay
       - Cleans up all event listeners and timers in the JS dispose function — no dangling handlers after component removal
   - name: Responsive layout that adapts to screen size
-    tags:
-      capability: use-js-interop
-      risk: baseline-misses-use-js-interop-guidance
-      journey: responsive-layout-that-adapts-to-screen-size
     prompt: |
       My Blazor Web App needs to adapt its layout based on the browser viewport width. I need:
 
@@ -143,10 +131,6 @@ stimuli:
       - Does not call JS interop during prerendering — guards all JS calls behind firstRender or a flag
       - Uses window.matchMedia or the resize event for viewport detection — not polling or server-side user-agent sniffing
   - name: Infinite scroll list using IntersectionObserver
-    tags:
-      capability: use-js-interop
-      risk: baseline-misses-use-js-interop-guidance
-      journey: infinite-scroll-list-using-intersectionobserver
     prompt: |
       I need an `InfiniteScrollList` component for my Blazor Web App that loads more items
       as the user scrolls.
@@ -194,85 +178,3 @@ stimuli:
       - Uses ElementReference for the sentinel element — not a string ID
       - Respects the HasMore parameter — does not trigger loads or observe the sentinel when there are no more items
       - Uses IntersectionObserver (not scroll event listeners) for efficient visibility detection
-  - name: Wine tasting form with focus management and a camera scanner
-    tags:
-      capability: element-reference-focus
-      risk: string-id-lookup-and-leaks
-      journey: camera-scanner-component
-    prompt: |
-      In my Blazor Web App (interactive server), build a `BottleScanner` component for a wine
-      cellar app.
-
-      Requirements:
-      - A text box for the bottle label code; when the page first shows, the box should be focused
-      - A "Scan" button that opens the device camera in a `<video>` element and stops reading
-        when the component is removed
-      - When a barcode is detected in the video stream, the code should be written into the
-        text box and the parent is notified through `EventCallback<string> OnScanned`
-      - After a successful scan, move keyboard focus to a "Add to cellar" button
-      - The component class should not be inheritable
-    environment:
-      commands:
-        - dotnet new blazor --interactivity Server --no-https
-    graders:
-      - type: file-contains
-        config:
-          path: '**/*.razor'
-          value: ElementReference
-      - type: output-matches
-        config:
-          pattern: \bsealed\b
-      - type: output-contains
-        config:
-          substring: JSInvokable
-      - type: output-matches
-        config:
-          pattern: (IAsyncDisposable|DisposeAsync)
-      - type: output-not-matches
-        config:
-          pattern: getElementById\(
-      - type: prompt
-    rubric:
-      - Passes the text box and video elements to JS via ElementReference captured with @ref, not by string id lookup
-      - Performs the initial focus and camera start from OnAfterRenderAsync(firstRender) or a button handler, never during initialization or prerender
-      - Uses a collocated JS module and a DotNetObjectReference for the detection callback, with the [JSInvokable] method public and state updates wrapped in InvokeAsync
-      - On disposal, stops the camera tracks in JS, disposes the module reference and the DotNetObjectReference, and tolerates JSDisconnectedException
-      - Treats the sealed requirement as a C# class-level concern (for example a code-behind partial class declared sealed) without breaking the interop lifecycle
-  - name: Server-rendered ticket queue that exports to a downloaded file
-    tags:
-      capability: circuit-disconnect-safety
-      risk: unhandled-js-disconnected
-      journey: export-and-clipboard
-    prompt: |
-      I have a Blazor Web App on interactive server rendering and a `TicketQueue` component with
-      a list of support tickets. Add an "Export CSV" button that downloads the current list as a
-      file in the browser, and a small "Copy link" button per ticket that puts the ticket URL on
-      the clipboard and shows "Copied!" for two seconds. Users on flaky Wi-Fi often drop the
-      connection and navigate away mid-action, and I sometimes see unhandled exceptions in the
-      logs when that happens. Please write the code and fix that.
-    environment:
-      commands:
-        - dotnet new blazor --interactivity Server --no-https
-    graders:
-      - type: output-contains
-        config:
-          substring: IJSObjectReference
-      - type: output-contains
-        config:
-          substring: JSDisconnectedException
-      - type: output-matches
-        config:
-          pattern: (IAsyncDisposable|DisposeAsync)
-      - type: output-matches
-        config:
-          pattern: (export function|export async function|export \{)
-      - type: output-not-matches
-        config:
-          pattern: (?m)^\s*(window|globalThis)\.\w+\s*=\s*(async\s*)?(function|\()
-      - type: prompt
-    rubric:
-      - Loads a collocated JS module lazily (on first use or first render) and holds an IJSObjectReference that is disposed on teardown
-      - Catches JSDisconnectedException around JS calls or disposal so lost circuits do not produce unhandled errors, without swallowing every exception type
-      - Uses IAsyncDisposable (awaited) rather than synchronous IDisposable with fire-and-forget JS calls
-      - Implements the download and clipboard operations in JS, using InvokeVoidAsync since no value returns, and does not expose them as window globals
-      - Keeps the "Copied!" timer from touching a disposed component, for example by cancelling it or guarding state changes on disposal

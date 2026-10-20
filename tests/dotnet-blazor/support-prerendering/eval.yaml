@@ -1,14 +1,10 @@
 name: support-prerendering
 description: Evaluates the dotnet-blazor/support-prerendering skill
 type: capability
-defaults:
+config:
   timeout: 10m
 stimuli:
   - name: Equipment inventory loaded once
-    tags:
-      capability: prerender-state-persistence
-      risk: duplicate-data-load
-      journey: persist-initial-load
     prompt: |
       I have an existing Blazor Web App with Interactive Server (per-page).
 
@@ -44,10 +40,6 @@ stimuli:
       - Does NOT disable prerendering — preserves the fast initial HTML response while avoiding duplicate loads
       - Creates a proper EquipmentService registered in DI, not inline data generation
   - name: Notifications page with live polling
-    tags:
-      capability: prerender-interactive-guard
-      risk: background-work-during-prerender
-      journey: guard-polling
     prompt: |
       I have an existing Blazor Web App with Interactive Server (per-page).
 
@@ -85,114 +77,3 @@ stimuli:
       - Persists initial notification data across the prerender-to-interactive handoff so the service is not called twice
       - Polling uses an async loop with CancellationTokenSource, cancelled in DisposeAsync — not System.Threading.Timer
       - Component implements IAsyncDisposable and cancels the polling token in DisposeAsync to prevent resource leaks
-  - name: Consent preferences page needing cookies in a globally interactive app
-    tags:
-      capability: static-ssr-page-in-interactive-app
-      risk: httpcontext-unavailable-interactively
-      journey: exclude-page-from-interactive-routing
-    prompt: |
-      I have a Blazor Web App (create one with `dotnet new blazor` if the workspace is empty)
-      where interactivity is configured globally with Interactive Server, so every page
-      runs interactively.
-
-      I need a /consent page where visitors choose analytics on/off. On submit, the page must
-      write a cookie named "consent" to the HTTP response and, on a later visit, read that
-      cookie from the request to preselect the choice. Every other page should keep working
-      interactively, and navigating to /consent from another page must reliably get a real
-      cookie-setting response. Please make the page and any change to the root App component
-      that this needs.
-    graders:
-      - type: file-exists
-        config:
-          path: '**/Consent.razor'
-      - type: file-contains
-        config:
-          path: '**/Consent.razor'
-          value: ExcludeFromInteractiveRouting
-      - type: file-contains
-        config:
-          path: '**/App.razor'
-          value: AcceptsInteractiveRouting
-      - type: file-contains
-        config:
-          path: '**/App.razor'
-          value: HttpContext
-      - type: prompt
-    rubric:
-      - The consent page is excluded from interactive routing so it renders as static SSR with access to HttpContext for reading and writing the cookie
-      - The root App component picks the render mode per request (interactive only when the request accepts interactive routing, otherwise none) for both head outlet and routes
-      - Cookie access is not attempted from an interactive-rendered component
-      - Other pages are left interactive; the global render mode is not removed from the whole app
-
-  - name: Diagnose HttpContext null reference and slow-load flicker without changing code
-    tags:
-      capability: prerender-diagnosis
-      risk: misattributed-root-cause
-      journey: explain-before-fixing
-    prompt: |
-      Don't edit anything, just explain. In my Blazor Web App (global Interactive Server) I have
-      two components and two symptoms.
-
-      Component A, `RecentOrders.razor`, has `protected override async Task OnInitializedAsync() => orders = await Db.LoadOrdersAsync();`.
-      On a hard refresh the list shows instantly, blanks to "Loading..." for a moment, then shows
-      again, and my database log shows the query twice.
-
-      Component B, `RegionBanner.razor`, has `[CascadingParameter] public HttpContext? Ctx { get; set; }`
-      and in OnInitialized does `region = Ctx.Request.Headers["X-Region"]`. It works on first
-      load but throws a NullReferenceException when I click a link to the page from another page.
-
-      For each component, why does it happen, and what is the right fix? Should I just turn
-      prerendering off everywhere?
-    graders:
-      - type: output-matches
-        config:
-          pattern: (?i)(PersistentState|PersistentComponentState)
-      - type: output-matches
-        config:
-          pattern: (?i)(twice|two times|second time|both)
-      - type: output-matches
-        config:
-          pattern: (?i)(ExcludeFromInteractiveRouting|static (SSR|server)|not available|only (available|set) (during|on|for))
-      - type: prompt
-    rubric:
-      - Explains that A's initialization runs once during prerender and again on interactive start, so the data is loaded and rendered twice, and recommends persisting the prerendered state (e.g. [PersistentState] with a null-coalescing guard) rather than disabling prerendering
-      - Explains that B's HttpContext exists only for the static request, and is null once the component runs interactively (such as with interactive navigation), and suggests keeping that page out of interactive routing/static SSR or avoiding HttpContext in interactive components
-      - Advises against disabling prerendering globally as the fix for these two problems
-      - Keeps to explanation without producing modified project files
-
-  - name: Browser-only chart widget on an otherwise prerendered page
-    tags:
-      capability: disable-prerender-scoped
-      risk: js-or-browser-api-during-prerender
-      journey: opt-out-single-component
-    prompt: |
-      I have a Blazor Web App (create one with `dotnet new blazor` if the workspace is empty)
-      using Interactive Server per-page. I'm adding a /sales page with a heading, a paragraph of
-      static marketing copy that should be in the first HTML response for SEO, and a
-      `SalesSparkline` component that draws a canvas using the browser's `window.devicePixelRatio`
-      and reads a saved preference from `localStorage` as soon as it appears. It calls into a small
-      JS module, `wwwroot/sparkline.js`, for the drawing.
-
-      Create the page, the component, and the JS file with fake data. The copy must stay fast,
-      but the widget shouldn't blow up or render a wrong frame before the browser is available.
-    graders:
-      - type: file-exists
-        config:
-          path: '**/Sales.razor'
-      - type: file-exists
-        config:
-          path: '**/SalesSparkline.razor'
-      - type: file-contains
-        config:
-          path: '**/*.razor'
-          value: 'prerender: false'
-      - type: file-contains
-        config:
-          path: '**/SalesSparkline.razor'
-          value: IJSRuntime
-      - type: prompt
-    rubric:
-      - Turns prerendering off only for the browser-dependent sparkline (on the component instance or its definition), not for the whole app or router
-      - The page's static copy remains prerendered and the page itself still uses an interactive render mode
-      - JS interop is not invoked from a prerender-time path in a way that would throw; it happens when the browser is available (after render or with prerender disabled for that component)
-      - Does not wrap the entire application's Routes in a prerender-disabled render mode

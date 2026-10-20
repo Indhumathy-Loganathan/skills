@@ -16,16 +16,12 @@ description: >
 
 # Author Blazor Component
 
-> **Continue after loading.** Loading this skill is the start of the task, not the end. In the same turn, do the work the user asked for (write the files or give the concrete answer), then finish with a final message that contains the actual code or steps, not just a summary of files changed. Read a reference file only if the question needs it.
-
-
 ## Core Rules
 
 - Data flows **down** via `[Parameter]`. Events flow **up** via `EventCallback<T>` (never `Action`/`Func`).
 - Never mutate `[Parameter]` properties. Copy to a private field in `OnParametersSet`.
 - Use `[Parameter] public T Prop { get; set; }` — never `required` or `init` (causes BL0007).
 - Use `[EditorRequired]` for required parameters.
-- Finish with the complete component source in the final message (every `.razor`/code-behind file), and make sure it compiles; use only APIs you are certain exist rather than inventing helper methods.
 - Handle all states: loading, empty, loaded, error — each with `@if`/`@else`.
 - Use `@key` on repeated elements in loops for efficient diffing.
 - Use `IReadOnlyList<T>` (not `IEnumerable<T>`) for collection parameters.

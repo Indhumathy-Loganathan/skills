@@ -6,10 +6,6 @@ defaults:
   runs: 5
 stimuli:
   - name: Wire Ignite UI into a split Blazor Web App
-    tags:
-      capability: use-igniteui-blazor
-      risk: baseline-misses-use-igniteui-blazor-guidance
-      journey: wire-ignite-ui-into-a-split-blazor-web-app
     prompt: |
       I have a Blazor Web App with a separate Server project and Client project, and I want to use Ignite UI components throughout the app.
 
@@ -48,10 +44,6 @@ stimuli:
       - Does not suggest the GridLite stylesheet, which is only needed for a grid-only setup
       - Keeps the answer specific to the relevant files instead of giving only general guidance
   - name: Wire Ignite UI into a single-project Blazor Server app
-    tags:
-      capability: use-igniteui-blazor
-      risk: baseline-misses-use-igniteui-blazor-guidance
-      journey: wire-ignite-ui-into-a-single-project-blazor-serv
     prompt: |
       I have an existing Blazor Server app — one project, created from the original Blazor Server template, with Pages/_Host.cshtml as the host page.
 
@@ -79,10 +71,6 @@ stimuli:
       - Places an Ignite UI theme stylesheet in Pages/_Host.cshtml
       - Tells the user that no render mode directive is needed because a Blazor Server app is already interactive, instead of instructing them to add one
   - name: Wire Ignite UI into a MAUI Blazor Hybrid app
-    tags:
-      capability: use-igniteui-blazor
-      risk: baseline-misses-use-igniteui-blazor-guidance
-      journey: wire-ignite-ui-into-a-maui-blazor-hybrid-app
     prompt: |
       I'm building a .NET MAUI Blazor Hybrid app — MauiProgram.cs, a BlazorWebView, and wwwroot/index.html — and I want to use Ignite UI Blazor components in the Razor pages it hosts.
 
@@ -111,10 +99,6 @@ stimuli:
       - Makes the control namespace available to the pages, for example through _Imports.razor
       - Does not send the user after render mode configuration, which does not apply to this project type
   - name: Wire up a grid-only Ignite UI setup
-    tags:
-      capability: use-igniteui-blazor
-      risk: baseline-misses-use-igniteui-blazor-guidance
-      journey: wire-up-a-grid-only-ignite-ui-setup
     prompt: |
       I only need a data grid out of Ignite UI — none of the other components — so I added just the IgniteUI.Blazor.GridLite package to my Blazor WebAssembly app and put the grid component on a page.
 
@@ -137,10 +121,6 @@ stimuli:
       - Makes the control namespace available to the page, for example through _Imports.razor
       - Keeps the setup grid-only instead of telling the user to also reference the full component package
   - name: Set up Ignite UI components without the grid package
-    tags:
-      capability: use-igniteui-blazor
-      risk: baseline-misses-use-igniteui-blazor-guidance
-      journey: set-up-ignite-ui-components-without-the-grid-pac
     prompt: |
       I have a standalone Blazor WebAssembly app — wwwroot/index.html, no server project — and I want to use Ignite UI inputs, a combo and a dialog on a few pages. I am never going to put a data grid in this app, so leave anything grid-related out of your answer entirely.
 
@@ -185,10 +165,6 @@ stimuli:
       - Makes the control namespace available to the pages, for example through _Imports.razor
       - Does not tell the user to add an interactive render mode directive, which does not apply to a standalone WebAssembly app
   - name: Wire Ignite UI into an interactive server Blazor Web App
-    tags:
-      capability: use-igniteui-blazor
-      risk: baseline-misses-use-igniteui-blazor-guidance
-      journey: wire-ignite-ui-into-an-interactive-server-blazor
     prompt: |
       I have a .NET 9 Blazor Web App with one server project and Interactive Server components. I want to add Ignite UI inputs and dialogs.
 
@@ -217,10 +193,6 @@ stimuli:
       - Uses the @Assets fingerprinted asset collection syntax for the theme stylesheet in Components/App.razor
       - Configures an InteractiveServer render mode for the component or globally
   - name: List the host-page assets for an Ignite UI Lite app
-    tags:
-      capability: use-igniteui-blazor
-      risk: baseline-misses-use-igniteui-blazor-guidance
-      journey: list-the-host-page-assets-for-an-ignite-ui-lite
     prompt: |
       Standalone Blazor WebAssembly app, already referencing IgniteUI.Blazor.Lite and calling AddIgniteUIBlazor(). The only thing I still need is the wwwroot/index.html side.
 
@@ -237,10 +209,6 @@ stimuli:
       - Does not link the GridLite stylesheet, which belongs only to a grid-only setup
       - Stays on the host-page tags the user asked for instead of restating the package and startup steps
   - name: Decide whether to pass module types to AddIgniteUIBlazor
-    tags:
-      capability: use-igniteui-blazor
-      risk: baseline-misses-use-igniteui-blazor-guidance
-      journey: decide-whether-to-pass-module-types-to-addignite
     prompt: |
       In my Blazor app I can write either AddIgniteUIBlazor() or AddIgniteUIBlazor(typeof(IgbComboModule), typeof(IgbDialogModule)).
 
@@ -257,10 +225,6 @@ stimuli:
       - Says components left off the list still register their own modules on first render and keep working
       - Does not claim an omitted module prevents a component from rendering or requires manual registration
   - name: Name the package behind a specific Igb component
-    tags:
-      capability: use-igniteui-blazor
-      risk: baseline-misses-use-igniteui-blazor-guidance
-      journey: name-the-package-behind-a-specific-igb-component
     prompt: |
       I want to put an IgbCombo on one page of my Blazor app. Which Ignite UI package do I install for it, and what else has to be in place before it renders properly?
     graders:
@@ -280,10 +244,6 @@ stimuli:
       - "Covers what IgbCombo needs beyond the package: AddIgniteUIBlazor() registration, the IgniteUI.Blazor.Controls namespace, and a theme stylesheet in the host page"
       - Does not invent a per-component package name such as IgniteUI.Blazor.Combo
   - name: Preserve an existing full Ignite UI package setup
-    tags:
-      capability: use-igniteui-blazor
-      risk: baseline-misses-use-igniteui-blazor-guidance
-      journey: preserve-an-existing-full-ignite-ui-package-setu
     prompt: |
       My Blazor Web App already references IgniteUI.Blazor.Trial in its Server and Client projects, and its grid works correctly.
 
@@ -296,10 +256,6 @@ stimuli:
       - Recognizes that IgbCombo is available through the existing package and does not require a separate package
       - Reuses the existing Ignite UI service registration instead of adding a separate Lite setup
   - name: Stay dormant for a plain Blazor component request
-    tags:
-      capability: dormancy
-      risk: plain-component-hijack
-      journey: defer-plain-component-authoring
     prompt: |
       Build a reusable Blazor confirmation dialog component with confirm and cancel callbacks. Use only built-in Blazor APIs and include a small usage example.
     expect_activation: false

@@ -1,14 +1,10 @@
 name: create-blazor-project
 description: Evaluates the dotnet-blazor/create-blazor-project skill
 type: capability
-defaults:
+config:
   timeout: 20m
 stimuli:
   - name: University course catalog with enrollment form
-    tags:
-      capability: create-blazor-project
-      risk: baseline-misses-create-blazor-project-guidance
-      journey: university-course-catalog-with-enrollment-form
     prompt: |
       Create a Blazor Web App for a university course catalog.
 
@@ -42,10 +38,6 @@ stimuli:
       - Documents the static rendering choice — explains why the app uses no interactive render mode
       - Plans the domain features — identifies the pages/components needed for browsing courses and submitting enrollments
   - name: Recipe community with interactive ratings on static pages
-    tags:
-      capability: create-blazor-project
-      risk: baseline-misses-create-blazor-project-guidance
-      journey: recipe-community-with-interactive-ratings-on-sta
     prompt: |
       Create a new Blazor Web App project for a recipe sharing community.
       Run `dotnet new blazor` with the appropriate options, create the project structure,
@@ -83,10 +75,6 @@ stimuli:
       - Documents the per-page strategy — explains why most pages are static and only specific features opt in to interactivity
       - Differentiates which features need interactivity (rating widget, form submission) vs which can be static (content browsing)
   - name: Global logistics tracking for worldwide users
-    tags:
-      capability: create-blazor-project
-      risk: baseline-misses-create-blazor-project-guidance
-      journey: global-logistics-tracking-for-worldwide-users
     prompt: |
       Create a Blazor Web App for a logistics company that tracks shipments.
 
@@ -125,79 +113,3 @@ stimuli:
       - Components cannot directly access server resources — all data through HTTP APIs, both server and client Program.cs register matching services, component code must not assume execution environment
       - Documents the Auto mode trade-offs — explains why this rendering strategy suits the requirements
       - Addresses the latency requirement — explains why Auto mode solves worldwide latency (Server first, then switches to WebAssembly for client-side speed)
-  - name: Field inspection app for beekeepers with weak connectivity
-    tags:
-      capability: scaffold-webassembly
-      risk: standalone-wasm-template
-      journey: offline-field-app
-    prompt: |
-      Set up a new Blazor project for a beekeeping cooperative. Inspectors walk between remote
-      apiaries with spotty mobile signal, record hive inspections (hive ID, brood pattern, queen
-      sighted, photos), and sync later. I was planning to run `dotnet new blazorwasm` for it.
-      Give me the exact scaffold command and tell me what projects I'll end up with.
-
-      Requirements:
-      - Inspection forms must keep working with no connection
-      - A small admin area where the co-op manager reviews synced inspections
-      - No sign-in required for the first release
-    environment:
-      commands:
-        - dotnet --version
-    graders:
-      - type: output-matches
-        config:
-          pattern: dotnet new blazor\b(?!wasm)
-      - type: output-matches
-        config:
-          pattern: (-int|--interactivity)\s+WebAssembly
-      - type: output-not-matches
-        config:
-          pattern: (?m)^\s*(\$\s*)?dotnet new (blazorwasm|blazorserver)\b
-      - type: output-matches
-        config:
-          pattern: (\.Client|service worker|PWA|manifest)
-      - type: prompt
-    rubric:
-      - Chooses the unified web app template with a WebAssembly interactivity option rather than the standalone SPA template, and explains the difference
-      - Describes the resulting server project plus .Client project and that interactive inspection components must live in the client project
-      - Notes that offline support is not part of the generated template and needs a service worker/manifest added afterwards
-      - Notes that data access from client-side components must go through an API rather than direct database access
-  - name: Gym trainer portal with organizational sign-in and live dashboards
-    tags:
-      capability: scaffold-auth-global
-      risk: wrong-auth-or-scope
-      journey: org-auth-interactive-everywhere
-    prompt: |
-      Start a Blazor web project for our gym chain's trainer portal. Trainers sign in with their
-      company Microsoft Entra ID accounts. Nearly every screen is live: class rosters update as
-      members check in, and trainers drag members between waitlist and class slots. It runs on
-      our own servers in a single data center on the corporate network. What command do you run
-      to scaffold it and how do you handle the sign-in?
-    environment:
-      commands:
-        - dotnet --version
-    graders:
-      - type: output-contains
-        config:
-          substring: dotnet new blazor
-      - type: output-matches
-        config:
-          pattern: (-int|--interactivity)\s+Server
-      - type: output-matches
-        config:
-          pattern: (-ai|--all-interactive)
-      - type: output-matches
-        config:
-          pattern: (-au|--auth)\s+Individual
-      - type: output-matches
-        config:
-          pattern: (Microsoft\.Identity\.Web|OpenIdConnect|OIDC)
-      - type: output-not-matches
-        config:
-          pattern: (?m)^\s*(\$\s*)?dotnet new blazor[^\n]*(-int|--interactivity)\s+(Auto|WebAssembly)\b
-      - type: prompt
-    rubric:
-      - Scaffolds a single-project Interactive Server app with global interactivity, justified by nearly every page being live and a single-data-center, low-latency deployment
-      - Recognizes the template only offers individual-account auth, so organizational Entra ID sign-in is added by replacing or supplementing the Identity setup with OIDC middleware and tenant configuration
-      - Does not pick WebAssembly or Auto without a requirement that calls for it
-      - Mentions that scaffolded Identity pages stay static SSR and do not get an interactive render mode
