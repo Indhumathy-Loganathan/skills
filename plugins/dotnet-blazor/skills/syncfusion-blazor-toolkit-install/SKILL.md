@@ -8,17 +8,22 @@ description: >
   render mode that matches the app topology (legacy Server, standalone WASM,
   or a Blazor Web App), and account for namespace consolidation.
 
-  USE FOR: Toolkit setup, package verification, theme model (SfThemeRoot /
+  USE FOR: any request to install, add, set up, register or troubleshoot the
+  free/open-source Syncfusion Blazor Toolkit in a web-hosted Blazor app (Server,
+  WebAssembly, or Web App): Toolkit setup, package verification, theme model (SfThemeRoot /
   CSS isolation), split-app registration, render-mode troubleshooting,
   diagnosing an accidental commercial Syncfusion.Blazor install or license-key
   prompt when the user wanted the open-source Toolkit, and migrating from
   Toolkit 1.x to 2.0 / 2.0.1 (full namespace unification including Data).
   DO NOT USE FOR: component API details (use author-component), Blazor project
   creation (use create-blazor-project), configuring commercial Syncfusion
-  components that the app actually uses, Hybrid/MAUI.
+  components that the app actually uses, Hybrid/MAUI (.NET MAUI Blazor Hybrid).
 ---
 
 # Install Syncfusion Blazor Toolkit
+
+> **Continue after loading.** Loading this skill is the start of the task, not the end. In the same turn, do the work the user asked for (write the files or give the concrete answer), then finish with a final message that contains the actual code or steps, not just a summary of files changed. Read a reference file only if the question needs it.
+
 
 ## Core Rules
 

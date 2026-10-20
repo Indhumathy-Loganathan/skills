@@ -1,10 +1,14 @@
 name: coordinate-components
 description: Evaluates the dotnet-blazor/coordinate-components skill
 type: capability
-config:
+defaults:
   timeout: 15m
 stimuli:
   - name: Warehouse dashboard with site selector and live stock alerts
+    tags:
+      capability: shared-state-service
+      risk: cross-user-leak-and-thread-marshalling
+      journey: live-dashboard
     prompt: |
       I have a Blazor Web App using per-page interactivity (InteractiveServer).
 
@@ -68,6 +72,10 @@ stimuli:
       - Polling is stopped and event subscriptions are removed when components are disposed — implements IDisposable or IAsyncDisposable and cleans up all resources
       - Alert updates notify ALL subscribed components (sidebar badge AND dashboard) — multiple subscribers react to the same state change
   - name: Multi-tenant notification hub with cross-component fan-out
+    tags:
+      capability: cascading-value-source
+      risk: static-layout-boundary
+      journey: app-wide-theme
     prompt: |
       I have a Blazor Web App with per-page Interactive Server mode (not global).
       The MainLayout renders statically (no @rendermode attribute on it).
@@ -114,3 +122,132 @@ stimuli:
       - Components consume the theme via [CascadingParameter] — same consumption pattern as CascadingValue but backed by DI-registered source
       - State is isolated per user — the CascadingValueSource registration is scoped (or effectively per-circuit), not singleton
       - Theme persists across enhanced navigations without page reload — the DI-registered source survives nav events within the same circuit
+  - name: Travel booking currency preference across static header and interactive pages
+    tags:
+      capability: cascading-parameter-across-render-modes
+      risk: null-cascading-parameter-in-interactive-child
+      journey: per-page-interactivity-preference
+    prompt: |
+      I have a Blazor Web App (.NET 9) where only some pages opt in to
+      @rendermode InteractiveServer; the layout and the home page are static.
+
+      I'm building a flight search site. The user picks a display currency
+      (an object with Code and Symbol, e.g. EUR / €) from a dropdown in the
+      header. I tried wrapping @Body in the layout with a <CascadingValue>
+      and adding [CascadingParameter] to my FareCard component, but on the
+      interactive /search page FareCard always gets null for the currency.
+
+      Please fix it so FareCard and any other component on any page receives
+      the currency, and so that when the user picks a different currency from
+      the header dropdown, every FareCard already on screen re-renders with
+      the new symbol without a reload. Show the registration, the dropdown
+      component, and FareCard.
+    environment:
+      commands:
+        - dotnet new blazor --interactivity server --no-https --force
+    graders:
+      - type: file-contains
+        config:
+          path: '**/Program.cs'
+          value: CascadingValueSource
+      - type: file-contains
+        config:
+          path: '**/*.razor'
+          value: CascadingParameter
+      - type: file-contains
+        config:
+          path: '**/*.razor'
+          value: NotifyChangedAsync
+      - type: prompt
+    rubric:
+      - The currency is supplied from a DI-registered source so it reaches interactive components even though the static layout cannot pass a cascading value across the render mode boundary
+      - The source is created as non-fixed (change notifications enabled) and the dropdown component gets the source injected to push the new currency
+      - Changing the currency notifies subscribers rather than reloading the page or forcing navigation refresh
+      - FareCard reads the currency through a cascading parameter that may be null-tolerant and does not poll or re-fetch it itself
+      - If the response mentions interactive apps that also run on WebAssembly, it notes the registration must also exist in the client project
+
+  - name: Ticket cart with hold-expiry timer updating header badge
+    tags:
+      capability: scoped-state-container
+      risk: unsubscribed-handler-and-wrong-thread
+      journey: cart-badge-and-timer
+    prompt: |
+      My Blazor Server app (global InteractiveServer) sells concert tickets.
+      There's a TicketCart that several unrelated components use: a seat map
+      adds seats, a header badge shows the seat count, and a checkout summary
+      lists them and the total.
+
+      Seats are only held for 5 minutes. I want a background timer inside the
+      cart that removes expired seats automatically, and the badge and the
+      checkout summary must update when that happens, even though nobody
+      clicked anything. I also navigate between pages a lot and I've noticed
+      memory growing over a long session, so please make sure nothing keeps
+      stale components alive.
+
+      Implement the cart class, its registration, and the badge and summary
+      components.
+    environment:
+      commands:
+        - dotnet new blazor --interactivity server --no-https --force
+    graders:
+      - type: file-contains
+        config:
+          path: '**/Program.cs'
+          value: AddScoped<
+      - type: file-contains
+        config:
+          path: '**/*.razor'
+          value: InvokeAsync(StateHasChanged)
+      - type: file-contains
+        config:
+          path: '**/*.razor'
+          value: -=
+      - type: file-contains
+        config:
+          path: '**/*.razor'
+          value: IDisposable
+      - type: prompt
+    rubric:
+      - The cart exposes a change event that is raised after every mutation, including removals performed by the timer
+      - Components that subscribe do so in a lifecycle method and remove exactly the same handler in Dispose, ideally keeping the delegate in a field when the handler is a lambda
+      - Because the event fires from a timer thread, the subscribers marshal re-rendering through InvokeAsync rather than calling StateHasChanged directly
+      - The cart's own timer is disposed when the service scope ends (service implements IDisposable or similar)
+      - The cart is registered with scoped lifetime so each user has an independent cart
+
+  - name: Library loans showing another reader's books after singleton registration
+    tags:
+      capability: service-lifetime-diagnosis
+      risk: singleton-state-leak-on-server
+      journey: debug-cross-user-data
+    prompt: |
+      Our Blazor Server library app has a LoanTracker class holding the
+      current reader's borrowed books plus a ReaderName property. A teammate
+      registered it with builder.Services.AddSingleton<LoanTracker>() because
+      "one instance is cheaper". In testing, two people logged in on different
+      machines and each sometimes sees the other's books and name. We plan to
+      later move the same components to WebAssembly as well.
+
+      Why is this happening, what should the registration be, and does the
+      answer change for WebAssembly? Keep it short; no need to build a project.
+    environment:
+      commands:
+        - dotnet new blazor --interactivity server --no-https --force
+    graders:
+      - type: output-matches
+        config:
+          pattern: (?i)AddScoped
+      - type: output-matches
+        config:
+          pattern: (?i)(circuit|connection|per[- ]user)
+      - type: output-matches
+        config:
+          pattern: (?i)(all users|every user|shared (across|by)|same instance)
+      - type: output-matches
+        config:
+          pattern: (?i)(webassembly|wasm)
+      - type: prompt
+    rubric:
+      - Explains that on Blazor Server a singleton is a single instance shared by every user's circuit, which is why one reader's data appears for another
+      - Recommends scoped lifetime, which is one instance per circuit, and does not recommend keeping the singleton for per-user data
+      - Explains that on WebAssembly a singleton is effectively per browser tab so it would be safe there, but code intended for both hosting models should still use scoped
+      - Does not suggest locking or per-user dictionaries inside the singleton as the primary fix

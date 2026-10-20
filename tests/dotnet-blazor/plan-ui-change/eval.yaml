@@ -1,10 +1,14 @@
 name: plan-ui-change
 description: Evaluates the dotnet-blazor/plan-ui-change skill
 type: capability
-config:
+defaults:
   timeout: 40m
 stimuli:
   - name: Project management Kanban board
+    tags:
+      capability: plan-ui-change
+      risk: baseline-misses-plan-ui-change-guidance
+      journey: project-management-kanban-board
     prompt: |
       Build a Blazor page for a project management Kanban board. This is a complex
       multi-section layout. Here are the service contracts
@@ -56,6 +60,10 @@ stimuli:
       - State changes in child components propagate correctly to the parent and other siblings — e.g., moving a task updates the column counts
       - Handles loading and error states with conditional rendering (@if/@else)
   - name: E-commerce product catalog with filters and pagination
+    tags:
+      capability: plan-ui-change
+      risk: baseline-misses-plan-ui-change-guidance
+      journey: e-commerce-product-catalog-with-filters-and-pagi
     prompt: |
       Build a Blazor page for browsing a product catalog. Here are the service contracts
       already registered in DI:
@@ -113,6 +121,10 @@ stimuli:
       - Filtering, sorting, and pagination all work together — changing filters resets to page 1, changing sort re-fetches
       - Handles loading, empty, and error states with conditional rendering
   - name: Multi-step job application wizard
+    tags:
+      capability: plan-ui-change
+      risk: baseline-misses-plan-ui-change-guidance
+      journey: multi-step-job-application-wizard
     prompt: |
       Build a Blazor page for a multi-step job application form. This has many
       distinct visual sections and shared state. Here are the service contracts already registered in DI:
@@ -187,6 +199,10 @@ stimuli:
       - Navigation between steps validates before advancing — prevents skipping required fields
       - The review step displays a read-only summary of all steps and supports going back to edit a specific step
   - name: Application settings page with nested tab panels
+    tags:
+      capability: plan-ui-change
+      risk: baseline-misses-plan-ui-change-guidance
+      journey: application-settings-page-with-nested-tab-panels
     prompt: |
       Build a Blazor page for an application settings dashboard. This has multiple
       nested sections. Here are the service contracts
@@ -265,6 +281,10 @@ stimuli:
       - Switching tabs loads the correct section content without a full page reload
       - Handles the save/discard flow with appropriate UI feedback (success message, disabled buttons during save)
   - name: Team chat interface with message threads
+    tags:
+      capability: plan-ui-change
+      risk: baseline-misses-plan-ui-change-guidance
+      journey: team-chat-interface-with-message-threads
     prompt: |
       Build a Blazor page for a team messaging app. This is a complex multi-panel
       layout with a sidebar, main area, and collapsible thread panel. Here are the service contracts

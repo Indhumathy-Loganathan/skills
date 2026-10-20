@@ -1,10 +1,14 @@
 name: collect-user-input
 description: Evaluates the dotnet-blazor/collect-user-input skill
 type: capability
-config:
+defaults:
   timeout: 15m
 stimuli:
   - name: Event registration with custom validation
+    tags:
+      capability: collect-user-input
+      risk: baseline-misses-collect-user-input-guidance
+      journey: event-registration-with-custom-validation
     prompt: |
       I have an existing Blazor Web App with Interactive Server (per-page).
 
@@ -52,6 +56,10 @@ stimuli:
       - The form lets the user correct the email and resubmit — errors clear when the field changes
       - Uses InputText, InputNumber, InputSelect or InputRadioGroup for the respective fields
   - name: Multi-step booking form with cross-field validation
+    tags:
+      capability: collect-user-input
+      risk: baseline-misses-collect-user-input-guidance
+      journey: multi-step-booking-form-with-cross-field-validat
     prompt: |
       I have a Blazor Web App with per-page interactivity (Server mode).
 
@@ -111,3 +119,150 @@ stimuli:
       - Uses data annotation attributes for client-side validation (Required, EmailAddress, MaxLength, custom date validator) with DataAnnotationsValidator
       - Multi-step progression — step 2 fields only appear after step 1 validates successfully, providing progressive disclosure
       - Time slots load dynamically based on doctor and date selection — cascading dropdown behavior within the form
+  - name: Static contact form with posted model
+    tags:
+      capability: collect-user-input
+      risk: baseline-misses-collect-user-input-guidance
+      journey: static-contact-form-with-posted-model
+    prompt: |
+      I have a Blazor Web App created with no interactivity at all (everything is
+      static server rendering, global scope).
+
+      Add a /support-ticket page where a customer can open a support ticket:
+      - Subject (required, up to 80 characters)
+      - Severity rating from 1 to 5
+      - Description (required)
+
+      The page must work with plain HTML form posts only. After a valid submit,
+      show a "Ticket received" confirmation line on the same page. I'd like the
+      submit to feel smooth, without a full page reload if possible, and the
+      form must display validation messages when fields are bad.
+    environment:
+      commands:
+        - dotnet new blazor --interactivity none --no-https --force
+    graders:
+      - type: file-exists
+        config:
+          path: '**/SupportTicket.razor'
+      - type: file-contains
+        config:
+          path: '**/SupportTicket.razor'
+          value: SupplyParameterFromForm
+      - type: file-contains
+        config:
+          path: '**/SupportTicket.razor'
+          value: FormName
+      - type: file-contains
+        config:
+          path: '**/SupportTicket.razor'
+          value: Enhance
+      - type: file-contains
+        config:
+          path: '**/SupportTicket.razor'
+          value: DataAnnotationsValidator
+      - type: file-contains
+        config:
+          path: '**/*.{razor,cs}'
+          value: Range(
+      - type: file-contains
+        config:
+          path: '**/*.{razor,cs}'
+          value: Required
+      - type: prompt
+    rubric:
+      - The page does not add a render mode and does not rely on interactive-only features such as @bind-Value, @oninput or @onclick handlers for the form
+      - The posted model is bound from the form post and is initialized when null so it works on both the initial GET and the POST
+      - Severity is limited to 1-5 and subject length is capped using validation attributes, and validation errors are displayed
+      - The form opts into enhanced form handling so the submit does not require a full page reload, and the confirmation is shown after a valid submit
+  - name: Plain HTML newsletter form in static rendering
+    tags:
+      capability: collect-user-input
+      risk: baseline-misses-collect-user-input-guidance
+      journey: plain-html-newsletter-form-in-static-rendering
+    prompt: |
+      My Blazor Web App has no interactivity configured; every page is statically
+      rendered. I don't want to use EditForm or any model-binding components here.
+
+      Add a /newsletter page with a hand-written HTML <form> that posts an email
+      address and a "frequency" choice (daily or weekly). When the post arrives,
+      display "Subscribed: <email>" under the form. A page elsewhere in the app
+      already has another form, so this one must be identifiable on its own.
+      The server must accept the post without antiforgery rejections.
+    environment:
+      commands:
+        - dotnet new blazor --interactivity none --no-https --force
+    graders:
+      - type: file-exists
+        config:
+          path: '**/Newsletter.razor'
+      - type: file-contains
+        config:
+          path: '**/Newsletter.razor'
+          value: AntiforgeryToken
+      - type: file-contains
+        config:
+          path: '**/Newsletter.razor'
+          value: SupplyParameterFromForm
+      - type: file-contains
+        config:
+          path: '**/Newsletter.razor'
+          value: <form
+      - type: output-not-matches
+        config:
+          pattern: '(?i)\bI (did not|didn''t) (create|add) '
+      - type: prompt
+    rubric:
+      - Uses a raw form element with method post, a form name attribute (formname or equivalent), and an antiforgery token inside the form
+      - Reads the posted values via SupplyParameterFromForm properties or an equivalent form-post binding, with the field names in the markup matching the bound property names
+      - Does not use @bind or @oninput, which need interactivity, and does not add a render mode
+      - Handles the initial GET gracefully when no posted value exists, showing the confirmation only after a post
+  - name: Avatar upload with custom validation attribute
+    tags:
+      capability: collect-user-input
+      risk: baseline-misses-collect-user-input-guidance
+      journey: avatar-upload-with-custom-validation-attribute
+    prompt: |
+      I have a Blazor Web App with Interactive Server enabled globally.
+
+      Build an /profile-photo page where a user picks an image of their face to
+      upload, plus a "display handle" text box. The handle must be a custom
+      rule: lowercase letters and digits only, and it must not be one of a
+      reserved list (admin, root, support). Show the rule violation next to the
+      handle field. Images can be up to 2 MB and only png or jpg; save the
+      accepted file to a local "uploads" folder under the app content root and
+      report the saved file name on the page. Reject larger files with a visible
+      message instead of crashing the circuit.
+    environment:
+      commands:
+        - dotnet new blazor --interactivity server --no-https --force
+    graders:
+      - type: file-exists
+        config:
+          path: '**/ProfilePhoto.razor'
+      - type: file-contains
+        config:
+          path: '**/ProfilePhoto.razor'
+          value: InputFile
+      - type: file-contains
+        config:
+          path: '**/ProfilePhoto.razor'
+          value: OpenReadStream
+      - type: file-contains
+        config:
+          path: '**/*.{razor,cs}'
+          value: ValidationAttribute
+      - type: file-contains
+        config:
+          path: '**/*.{razor,cs}'
+          value: IsValid
+      - type: file-contains
+        config:
+          path: '**/ProfilePhoto.razor'
+          value: DataAnnotationsValidator
+      - type: prompt
+    rubric:
+      - The handle rule is a class deriving from ValidationAttribute (or implementing IValidatableObject) applied to the model property, and its error appears through ValidationMessage or ValidationSummary
+      - File upload uses InputFile with an OnChange handler, and OpenReadStream is given an explicit maximum size of 2 MB rather than relying on the 500 KB default
+      - Oversized or wrong-type files produce a user-visible message and the exception is caught or the size and type are checked before reading
+      - The saved file name is generated safely (not trusting the client-supplied name for the path) and the page reports the result
+      - The page is interactive (the project is Interactive Server) and does not need FormName-only static SSR workarounds

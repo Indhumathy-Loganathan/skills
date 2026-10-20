@@ -17,6 +17,9 @@ description: >
 
 # Coordinate Components
 
+> **Continue after loading.** Loading this skill is the start of the task, not the end. In the same turn, do the work the user asked for (write the files or give the concrete answer), then finish with a final message that contains the actual code or steps, not just a summary of files changed. Read a reference file only if the question needs it.
+
+
 ## Step 1 — Read AGENTS.md
 
 Read `AGENTS.md` at the workspace root to learn the project's conventions before making changes.

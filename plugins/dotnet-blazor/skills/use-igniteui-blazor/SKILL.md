@@ -19,6 +19,9 @@ description: >
 
 # Application Setup & Component Registration
 
+> **Continue after loading.** Loading this skill is the start of the task, not the end. In the same turn, do the work the user asked for (write the files or give the concrete answer), then finish with a final message that contains the actual code or steps, not just a summary of files changed. Read a reference file only if the question needs it.
+
+
 ## 1. NuGet package
 
 Before adding packages, inspect the target projects' target framework and existing package references. The lowest supported target framework version is .NET 8.0. If `IgniteUI.Blazor` or `IgniteUI.Blazor.Trial` is already referenced, keep that package strategy and do not add Lite or GridLite. Only switch package families when the user explicitly asks, replacing conflicting references rather than keeping both.
@@ -72,6 +75,10 @@ builder.Services.AddIgniteUIBlazor();
 // Client (WebAssemblyHostBuilder)
 builder.Services.AddIgniteUIBlazor();
 ```
+
+**Legacy Blazor Server (`Pages/_Host.cshtml`)** and **standalone WebAssembly**: one project, one `Program.cs`; register once there. These apps are already interactive: do not add `@rendermode`. Put the theme link in `Pages/_Host.cshtml` or `wwwroot/index.html`, and `@using IgniteUI.Blazor.Controls` in `_Imports.razor`.
+
+**.NET MAUI Blazor Hybrid:** add the package to the MAUI project, call `builder.Services.AddIgniteUIBlazor();` in `MauiProgram.cs` (next to `AddMauiBlazorWebView()`), link the theme in `wwwroot/index.html`, and add the `@using` to `_Imports.razor`. Missing theme link is the usual cause of unstyled components. There is no render mode here.
 
 For a single-project Interactive Server Blazor Web App, call `AddIgniteUIBlazor()` once in the server `Program.cs`. Do not add a client project or WebAssembly services.
 
