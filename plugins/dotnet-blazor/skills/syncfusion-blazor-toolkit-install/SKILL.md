@@ -2,22 +2,21 @@
 license: MIT
 name: syncfusion-blazor-toolkit-install
 description: >
-  Install and register the open-source Syncfusion Blazor Toolkit package
-  (v2.0.1+), configure AddSyncfusionBlazorToolkit(), rely on SfThemeRoot and CSS
-  isolation for theming (no host fluent.min.css link), apply the interactive
-  render mode that matches the app topology (legacy Server, standalone WASM,
-  or a Blazor Web App), and account for namespace consolidation.
+  Install, upgrade, or troubleshoot setup of the open-source Syncfusion Blazor
+  Toolkit (v2.0.1+) in a web-hosted Blazor app: package identity, service
+  registration, SfThemeRoot/CSS-isolation theming, host files, namespaces,
+  split Web App registration, and interactive render-mode boundaries.
 
-  USE FOR: any request to install, add, set up, register or troubleshoot the
-  free/open-source Syncfusion Blazor Toolkit in a web-hosted Blazor app (Server,
-  WebAssembly, or Web App): Toolkit setup, package verification, theme model (SfThemeRoot /
-  CSS isolation), split-app registration, render-mode troubleshooting,
-  diagnosing an accidental commercial Syncfusion.Blazor install or license-key
-  prompt when the user wanted the open-source Toolkit, and migrating from
-  Toolkit 1.x to 2.0 / 2.0.1 (full namespace unification including Data).
-  DO NOT USE FOR: component API details (use author-component), Blazor project
-  creation (use create-blazor-project), configuring commercial Syncfusion
-  components that the app actually uses, Hybrid/MAUI (.NET MAUI Blazor Hybrid).
+  USE ONLY WHEN: the user asks to install, migrate, register, configure hosting
+  or theming, or diagnose a setup failure for Syncfusion.Blazor.Toolkit in
+  legacy Blazor Server, standalone WebAssembly, or a Blazor Web App. Also use
+  for accidental commercial Syncfusion.Blazor installs or license prompts when
+  the user intended the open-source Toolkit.
+  DO NOT USE WHEN: the Toolkit is already installed and the question is about
+  component APIs or behavior such as grid columns, data binding, events, or
+  styling a specific component (use author-component); the user asks to create
+  a Blazor project (use create-blazor-project); the app is .NET MAUI Blazor
+  Hybrid; or the app intentionally uses commercial Syncfusion components.
 ---
 
 # Install Syncfusion Blazor Toolkit

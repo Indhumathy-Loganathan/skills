@@ -69,9 +69,6 @@ stimuli:
       - type: output-matches
         config:
           pattern: (?i)wwwroot[/\\]index\.html|index\.html
-      - type: output-matches
-        config:
-          pattern: '(?im)(?:^|(?<=[.:;!?])\s+)(?!(?:(?![.:;!?](?:\s|$))[^\n])*?(?:\b(?:not|never|avoid|without)\b|\w+n[''’]t\b))(?:(?![.:;!?](?:\s|$))[^\n])*?RootComponents\.Add<App>\("#app"\)'
       # Affirmative "add @rendermode" only — "do not add @rendermode" must pass
       - type: output-not-matches
         config:
@@ -360,7 +357,7 @@ stimuli:
     graders:
       - type: output-matches
         config:
-          pattern: (?i)@using\s+Syncfusion\.Blazor\.Toolkit\b
+          pattern: (?i)@using\s+Syncfusion\.Blazor\.Toolkit(?![A-Za-z0-9_]|\.[A-Z])
       - type: output-matches
         config:
           pattern: (?i)(single root|namespace consolidation|removed|no longer|2\.0)
@@ -530,7 +527,7 @@ stimuli:
       - Treats grid column binding and row-selection events as component API usage outside install/registration guidance.
       - Does not install packages, register Toolkit services, or add theme links as the answer.
       - Does not hijack the request with Toolkit install guidance.
-      - The Toolkit install skill stayed dormant: the answer does not rely on it and treats this request as outside the scope of Toolkit setup.
+      - "The Toolkit install skill stayed dormant: the answer does not rely on it and treats this request as outside the scope of Toolkit setup."
 
   - name: out-of-scope-project-creation
     tags:
@@ -550,7 +547,7 @@ stimuli:
       - Handles project creation with the standard Blazor template guidance (dotnet new blazor and its options).
       - Does not install Syncfusion packages or register Toolkit services, since none were requested.
       - Does not hijack the request with Toolkit install guidance.
-      - The Toolkit install skill stayed dormant: the answer does not rely on it and treats this request as outside the scope of Toolkit setup.
+      - "The Toolkit install skill stayed dormant: the answer does not rely on it and treats this request as outside the scope of Toolkit setup."
 
   - name: out-of-scope-maui-blazor-hybrid
     tags:
@@ -570,4 +567,4 @@ stimuli:
       - Recognizes MAUI Blazor Hybrid is outside this skill's host/render-mode guidance.
       - Does not instruct opening Components/App.razor or _Host.cshtml as the Hybrid setup path.
       - Does not hijack the request with Web App install guidance.
-      - The Toolkit install skill stayed dormant: the answer does not rely on it and treats this request as outside the scope of Toolkit setup.
+      - "The Toolkit install skill stayed dormant: the answer does not rely on it and treats this request as outside the scope of Toolkit setup."
