@@ -171,7 +171,7 @@ For split Web Apps, register on **both** Server and Client `Program.cs`. Rebuild
 ## General Checklist
 
 1. ✓ `<TargetFramework>` is `net8.0`, `net9.0`, or `net10.0`. If older, upgrade first.
-2. ✓ Package is `Syncfusion.Blazor.Toolkit` (not commercial `Syncfusion.Blazor.*` unless still required), version 2.0.0 or newer preferred.
+2. ✓ Package is `Syncfusion.Blazor.Toolkit` (not commercial `Syncfusion.Blazor.*` unless still required), version 2.0.1 or newer preferred.
 3. ✓ `using Syncfusion.Blazor.Toolkit;` and `AddSyncfusionBlazorToolkit()` are in every host `Program.cs` that renders Toolkit (server and Client in a split Web App).
 4. ✓ `@using Syncfusion.Blazor.Toolkit` is in `_Imports.razor` of projects that render Toolkit. No 1.x domain namespaces.
 5. ✓ Template `AddAdditionalAssemblies(...)` and `AddInteractive*` calls are unchanged.
